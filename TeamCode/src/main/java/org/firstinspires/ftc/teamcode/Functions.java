@@ -19,7 +19,7 @@ public class Functions extends LinearOpMode{
 
     private ElapsedTime runtime = new ElapsedTime();
 
-    //CONSTANTS FOR THE MOTOR ENCODER CONVERSIONS
+    //CONSTANTS FOR THE MOTOR ENCODER CONVERSIONS For robot
 
     public static final double COUNTS_PER_MOTOR_REV = 1680;    // eg: NeverRest  Encoder
     public static final double COUNTS_MOTOR_REG = 1440;
