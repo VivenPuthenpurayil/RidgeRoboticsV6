@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 @Autonomous(name="Jewel System Test", group="Test")
 
-public class Test_Jewel extends Functions {
+public class Test_armGlyph extends Functions {
 
     public ElapsedTime runtime = new ElapsedTime();
 
@@ -19,10 +19,7 @@ public class Test_Jewel extends Functions {
         waitForStart();
         runtime.reset();
         while (opModeIsActive()) {
-            FlickDown();
-            sleep(5000);
-            FlickUp();
-            sleep(2000);
+
 
             break;
         }
