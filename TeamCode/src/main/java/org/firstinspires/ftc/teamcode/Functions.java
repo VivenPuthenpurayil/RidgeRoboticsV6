@@ -12,10 +12,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import java.util.Scanner;
 /**
  * Created by arulgupta on 9/26/17.
- **/
+ */
 @Autonomous(name="Functions", group="Main Blue")
 
-public class Functions extends LinearOpMode {
+public class Functions extends LinearOpMode{
 
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -36,7 +36,6 @@ public class Functions extends LinearOpMode {
     public DcMotor motorFL;
     public DcMotor motorBR;
     public DcMotor motorBL;
-    public DcMotor bigArm;
     public Servo jewelDown;
     public Servo jewelFlick;
     public Servo rightArm;
@@ -55,25 +54,22 @@ public class Functions extends LinearOpMode {
 
     //------------------------------------------------------------------------------------------------------------------------
 
-    public Functions() {
+    public Functions(){
 
     }
-
-    public void runOpMode() throws InterruptedException {
+    public void runOpMode() throws InterruptedException{
         Setup();
 
     }
-
-    public void Setup() throws InterruptedException {
+    public void Setup() throws InterruptedException{
         motorFR = hardwareMap.dcMotor.get("motorFR_1");
         motorFL = hardwareMap.dcMotor.get("motorFL_2");
         motorBR = hardwareMap.dcMotor.get("motorBR_1");
         motorBL = hardwareMap.dcMotor.get("motorBL_2");
-        bigArm = hardwareMap.dcMotor.get("bigArm"); //not configured in robot yet.
         jewelDown = hardwareMap.servo.get("jewelDown_1");
         jewelFlick = hardwareMap.servo.get("jewelFlick_2");
-        rightArm = hardwareMap.servo.get("rightArm_3");//not configured in robot yet.
-        leftArm = hardwareMap.servo.get("leftArm_4");//not configured in robot yet.
+        rightArm = hardwareMap.servo.get("rightArm_3");
+        leftArm = hardwareMap.servo.get("leftArm_4");
 
         jewelDown.setDirection(Servo.Direction.FORWARD);//CHECK AND CHOOSE DIRECTION
         jewelFlick.setDirection(Servo.Direction.FORWARD);//CHECK AND CHOOSE DIRECTION
@@ -97,7 +93,6 @@ public class Functions extends LinearOpMode {
         motorFL.setPower(0);
         motorBR.setPower(0);
         motorBL.setPower(0);
-        bigArm.setPower(0);
 
 
         motorFR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -115,8 +110,7 @@ public class Functions extends LinearOpMode {
         telemetry.addLine("READY!");
         telemetry.update();
     }
-
-    public void Forward(double speed, double distance,  /*In Revolution*/ double timeoutS, long waitAfter) throws InterruptedException {
+    public void Forward(double speed, double distance,  /*In Revolution*/ double timeoutS, long waitAfter) throws   InterruptedException {
 
         int newFLTarget;
         int newFRTarget;
@@ -181,8 +175,7 @@ public class Functions extends LinearOpMode {
         }
 
     }
-
-    public void Backward(double speed, double distance,  /*In Revolution*/ double timeoutS, long waitAfter) throws InterruptedException {
+    public void Backward(double speed, double distance,  /*In Revolution*/ double timeoutS, long waitAfter) throws   InterruptedException {
 
         int newFLTarget;
         int newFRTarget;
@@ -247,8 +240,7 @@ public class Functions extends LinearOpMode {
         }
 
     }
-
-    public void Right(double speed, double distance,  /*In Revolution*/ double timeoutS, long waitAfter) throws InterruptedException {
+    public void Right(double speed, double distance,  /*In Revolution*/ double timeoutS, long waitAfter) throws   InterruptedException {
 
         int newFLTarget;
         int newFRTarget;
@@ -313,8 +305,7 @@ public class Functions extends LinearOpMode {
         }
 
     }
-
-    public void Left(double speed, double distance,  /*In Revolution*/ double timeoutS, long waitAfter) throws InterruptedException {
+    public void Left(double speed, double distance,  /*In Revolution*/ double timeoutS, long waitAfter) throws   InterruptedException {
 
         int newFLTarget;
         int newFRTarget;
@@ -379,8 +370,7 @@ public class Functions extends LinearOpMode {
         }
 
     }
-
-    public void TR(double speed, double distance,  /*In Revolution*/ double timeoutS, long waitAfter) throws InterruptedException {
+    public void TR(double speed, double distance,  /*In Revolution*/ double timeoutS, long waitAfter) throws   InterruptedException {
 
         int newFLTarget;
         int newFRTarget;
@@ -445,8 +435,7 @@ public class Functions extends LinearOpMode {
         }
 
     }
-
-    public void TL(double speed, double distance,  /*In Revolution*/ double timeoutS, long waitAfter) throws InterruptedException {
+    public void TL(double speed, double distance,  /*In Revolution*/ double timeoutS, long waitAfter) throws   InterruptedException {
 
         int newFLTarget;
         int newFRTarget;
@@ -511,8 +500,7 @@ public class Functions extends LinearOpMode {
         }
 
     }
-
-    public void BR(double speed, double distance,  /*In Revolution*/ double timeoutS, long waitAfter) throws InterruptedException {
+    public void BR(double speed, double distance,  /*In Revolution*/ double timeoutS, long waitAfter) throws   InterruptedException {
 
         int newFLTarget;
         int newFRTarget;
@@ -577,8 +565,7 @@ public class Functions extends LinearOpMode {
         }
 
     }
-
-    public void BL(double speed, double distance,  /*In Revolution*/ double timeoutS, long waitAfter) throws InterruptedException {
+    public void BL(double speed, double distance,  /*In Revolution*/ double timeoutS, long waitAfter) throws   InterruptedException {
 
         int newFLTarget;
         int newFRTarget;
@@ -643,26 +630,18 @@ public class Functions extends LinearOpMode {
         }
 
     }
-
-    public void FlickDown() {
+    public void FlickDown(){
         jewelDown.setPosition(1);
         jewelFlick.setPosition(1);
-    }
-
-    ;
-
-    public void FlickUp() {
+    };
+    public void FlickUp(){
         jewelDown.setPosition(0);
         jewelFlick.setPosition(0);
-    }
-
-    ;
-
+    };
     public void setRuntime(ElapsedTime time) throws InterruptedException {
         runtime = time;
     }
-
-    public void MecanumTest() throws InterruptedException {
+    public void MecanumTest()throws InterruptedException {
         Forward(0.7, 10, 8, 2);
         Backward(0.7, 10, 8, 2);
         Right(0.7, 10, 8, 2);
@@ -672,22 +651,16 @@ public class Functions extends LinearOpMode {
         BR(0.7, 10, 8, 2);
         BL(0.7, 10, 8, 2);
     }
-    public void glyphArmMoveTo(double angle){
-        sleep(2500);
-        if (angle<0){
-            angle = 0;
-        }
-        else if (angle>1) {
-            angle = 1;
-        }
-        leftArm.setPosition(angle);
-        rightArm.setPosition(angle);
-
+    public void grabGlyph() throws InterruptedException {
+        rightArm.setPosition(1);
+        leftArm.setPosition(1);
     }
-    public void bigArmMoveTo(double power, double seconds){
-        bigArm.setPower(power);
-        sleep((int)seconds*1500);
-
+    public void leaveGlyph() throws InterruptedException {
+        rightArm.setPosition(0);
+        leftArm.setPosition(0);
     }
-//this is a github test 2
+
+
 }
+
+
