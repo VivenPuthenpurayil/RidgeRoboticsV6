@@ -686,10 +686,8 @@ public class Functions extends LinearOpMode {
     }
     public void bigArmMoveTo(double power, double seconds){
         bigArm.setPower(power);
-        sleep((int)seconds*1000);
+        sleep((int)seconds*1500);
 
     }
-//this is a github test
+//this is a github test 2
 }
-
-
