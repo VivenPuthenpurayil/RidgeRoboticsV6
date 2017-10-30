@@ -38,9 +38,15 @@ public class Functions extends LinearOpMode{
     public DcMotor motorBL;
     public Servo jewelDown;
     public Servo jewelFlick;
+    public Servo pivot;
+    public DcMotor dcPivot;
     public Servo rightArm;
     public Servo leftArm;
+    public Servo liftPivot;
 
+    public enum treadPivotSettings{
+        lift, drop, center;
+    }
     //---------------SERVO SETUP--------------------------------
 
     //starting positions
@@ -68,22 +74,22 @@ public class Functions extends LinearOpMode{
         motorBL = hardwareMap.dcMotor.get("motorBL_2");
         jewelDown = hardwareMap.servo.get("jewelDown_1");
         jewelFlick = hardwareMap.servo.get("jewelFlick_2");
-        rightArm = hardwareMap.servo.get("rightArm_3");
-        leftArm = hardwareMap.servo.get("leftArm_4");
+        pivot = hardwareMap.servo.get("pivot_3");
+        rightArm = hardwareMap.servo.get("rightArm_4");
+        leftArm = hardwareMap.servo.get("leftArm_5");
+        liftPivot = hardwareMap.servo.get("liftPivot_0");
 
         jewelDown.setDirection(Servo.Direction.FORWARD);//CHECK AND CHOOSE DIRECTION
         jewelFlick.setDirection(Servo.Direction.FORWARD);//CHECK AND CHOOSE DIRECTION
-        rightArm.setDirection(Servo.Direction.FORWARD);//CHECK AND CHOOSE DIRECTION
-        leftArm.setDirection(Servo.Direction.FORWARD);//CHECK AND CHOOSE DIRECTION
+        pivot.setDirection(Servo.Direction.FORWARD);//CHECK AND CHOOSE DIRECTION
+        rightArm.setDirection(Servo.Direction.FORWARD);
+
 
         jewelDown.scaleRange(startingPositionDown, endPositionDown);
         jewelFlick.scaleRange(startingPositionFlick, endPositionFlick);
 
         jewelDown.setPosition(0);
         jewelFlick.setPosition(0);
-        rightArm.setPosition(0);
-        leftArm.setPosition(0);
-
         motorFR.setDirection(DcMotorSimple.Direction.FORWARD);
         motorFL.setDirection(DcMotorSimple.Direction.REVERSE);
         motorBR.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -651,13 +657,18 @@ public class Functions extends LinearOpMode{
         BR(0.7, 10, 8, 2);
         BL(0.7, 10, 8, 2);
     }
-    public void grabGlyph() throws InterruptedException {
-        rightArm.setPosition(1);
-        leftArm.setPosition(1);
-    }
-    public void leaveGlyph() throws InterruptedException {
-        rightArm.setPosition(0);
-        leftArm.setPosition(0);
+    public void setPivot(treadPivotSettings position) throws InterruptedException{
+        switch (position){
+            case lift:
+                pivot.setPosition(0);
+                break;
+            case center:
+                pivot.setPosition(0.5);
+                break;
+            case drop:
+                pivot.setPosition(1);
+                break;
+        }
     }
 
 
