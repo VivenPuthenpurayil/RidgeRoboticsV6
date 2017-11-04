@@ -58,14 +58,14 @@ public class DriveModeMecanum extends Functions{
                 if (fb > rl && fb > -rl && fb > 0.1 & !ls) {
                     //Forward
                     motorFR.setPower(fb);
-                    motorBR.setPower(fb);
-                    motorFL.setPower(-fb);
+                    motorBR.setPower(-fb);
+                    motorFL.setPower(fb);
                     motorBL.setPower(-fb);
                 } else if (fb < rl && fb < -rl && fb < -0.1 & !ls) {
                     //Backward
                     motorFR.setPower(fb);
-                    motorBR.setPower(fb);
-                    motorFL.setPower(-fb);
+                    motorBR.setPower(-fb);
+                    motorFL.setPower(fb);
                     motorBL.setPower(-fb);
                 } else if (fb > rl && fb < -rl && rl < -0.1 & !ls) {
                     //Left

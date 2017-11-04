@@ -31,18 +31,22 @@ public class Functions extends LinearOpMode{
     public static final double COUNTS_PER_INCHTETRIX = (COUNTS_MOTOR_REG * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
 
-    //                              MOTOR/SERVO DECLARATIONS
+    //                             MOTOR/SERVO DECLARATIONS
+
+    //Drivetrains:
     public DcMotor motorFR;
     public DcMotor motorFL;
     public DcMotor motorBR;
     public DcMotor motorBL;
+    //Jewel Systems:
     public Servo jewelDown;
     public Servo jewelFlick;
-    //public Servo pivot;
+    //Relic Systems:
+    public Servo  relicClaw;
+    public Servo relicWrist;
+    public DcMotor relicArm;
+    //Glyph System:
     public DcMotor pivot;
-    public Servo rightArm;
-    public Servo leftArm;
-    public Servo liftPivot;
 
     public enum treadPivotSettings{
         lift, drop, center;
@@ -73,6 +77,7 @@ public class Functions extends LinearOpMode{
     public void Setup(setupType setup) throws InterruptedException{
         switch (setup){
             case all:
+
                 motorFR = hardwareMap.dcMotor.get("motorFR_1");
                 motorFL = hardwareMap.dcMotor.get("motorFL_2");
                 motorBR = hardwareMap.dcMotor.get("motorBR_1");
@@ -80,10 +85,17 @@ public class Functions extends LinearOpMode{
                 pivot = hardwareMap.dcMotor.get("pivot_0");
                 jewelDown = hardwareMap.servo.get("jewelDown_1");
                 jewelFlick = hardwareMap.servo.get("jewelFlick_2");
+                relicArm = hardwareMap.dcMotor.get("relicArm_green3");
+                relicClaw = hardwareMap.servo.get("relicClaw_green0");
+                relicWrist = hardwareMap.servo.get("relicWrist_green1");
+
 
                 jewelDown.setDirection(Servo.Direction.FORWARD);//CHECK AND CHOOSE DIRECTION
                 jewelFlick.setDirection(Servo.Direction.FORWARD);//CHECK AND CHOOSE DIRECTION
                 pivot.setDirection(DcMotor.Direction.FORWARD);//CHECK AND CHOOSE DIRECTION
+                relicArm.setDirection(DcMotorSimple.Direction.FORWARD);
+                relicClaw.setDirection(Servo.Direction.FORWARD);
+                relicWrist.setDirection(Servo.Direction.FORWARD);
 
 
                 jewelDown.scaleRange(startingPositionDown, endPositionDown);
@@ -91,12 +103,15 @@ public class Functions extends LinearOpMode{
 
                 jewelDown.setPosition(0);
                 jewelFlick.setPosition(0);
+                relicWrist.setPosition(0);
+                relicClaw.setPosition(0);
 
                 motorFR.setDirection(DcMotorSimple.Direction.FORWARD);
                 motorFL.setDirection(DcMotorSimple.Direction.REVERSE);
                 motorBR.setDirection(DcMotorSimple.Direction.FORWARD);
                 motorBL.setDirection(DcMotorSimple.Direction.REVERSE);
                 pivot.setDirection(DcMotorSimple.Direction.FORWARD);
+                relicArm.setDirection(DcMotorSimple.Direction.FORWARD);
 
 
                 motorFR.setPower(0);
@@ -104,6 +119,7 @@ public class Functions extends LinearOpMode{
                 motorBR.setPower(0);
                 motorBL.setPower(0);
                 pivot.setPower(0);
+                relicArm.setPower(0);
 
 
 
@@ -112,6 +128,8 @@ public class Functions extends LinearOpMode{
                 motorBR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 motorBL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 pivot.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                relicArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
 
                 idle();
 
@@ -120,6 +138,8 @@ public class Functions extends LinearOpMode{
                 motorBR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 motorBL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 pivot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                relicArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
 
                 telemetry.addLine("SETUP COMPLETE");
                 telemetry.addLine("READY!");
@@ -133,6 +153,20 @@ public class Functions extends LinearOpMode{
                 pivot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 pivot.setPower(0);
                 break;
+            case relic:
+                relicArm = hardwareMap.dcMotor.get("relicArm_green3");
+                relicClaw = hardwareMap.servo.get("relicClaw_green0");
+                relicWrist = hardwareMap.servo.get("relicWrist_green1");
+
+                relicArm.setDirection(DcMotorSimple.Direction.FORWARD);
+                relicClaw.setDirection(Servo.Direction.FORWARD);
+                relicWrist.setDirection(Servo.Direction.FORWARD);
+
+                relicArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+                idle();
+
+                relicArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
 
     }
@@ -726,6 +760,9 @@ public class Functions extends LinearOpMode{
         TL(0.7, 10, 8, 2);
         BR(0.7, 10, 8, 2);
         BL(0.7, 10, 8, 2);
+    }
+    public void setServoPosition(double degrees, Servo servo, double maxDegrees) throws InterruptedException{
+        servo.setPosition(degrees/maxDegrees);
     }
     /*public void setPivot(treadPivotSettings position) throws InterruptedException{
         switch (position){
