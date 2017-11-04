@@ -8,9 +8,9 @@ import org.firstinspires.ftc.teamcode.Functions;
 /**
  * Created by arulgupta on 9/29/17.
  */
-@Autonomous(name="Jewel System", group="Test2")
+@Autonomous(name="Glyph System Test", group="Test")
 
-public class Test_Jewel extends Functions {
+public class Test_armGlyph extends Functions {
 
     public ElapsedTime runtime = new ElapsedTime();
 
@@ -21,11 +21,8 @@ public class Test_Jewel extends Functions {
         waitForStart();
         runtime.reset();
         while (opModeIsActive()) {
-            FlickDown();
-            sleep(5000);
-            FlickUp();
-            sleep(2000);
-
+            pivotForward(0.4, 60, 5, 3);
+            sleep(50);
             break;
         }
     }

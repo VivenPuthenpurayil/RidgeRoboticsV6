@@ -38,14 +38,17 @@ public class Functions extends LinearOpMode{
     public DcMotor motorBL;
     public Servo jewelDown;
     public Servo jewelFlick;
-    public Servo pivot;
-    public DcMotor dcPivot;
+    //public Servo pivot;
+    public DcMotor pivot;
     public Servo rightArm;
     public Servo leftArm;
     public Servo liftPivot;
 
     public enum treadPivotSettings{
         lift, drop, center;
+    }
+    public enum setupType{
+        all, glyph, jewel, relic, drive;
     }
     //---------------SERVO SETUP--------------------------------
 
@@ -64,57 +67,74 @@ public class Functions extends LinearOpMode{
 
     }
     public void runOpMode() throws InterruptedException{
-        Setup();
+        Setup(setupType.all);
 
     }
-    public void Setup() throws InterruptedException{
-        motorFR = hardwareMap.dcMotor.get("motorFR_1");
-        motorFL = hardwareMap.dcMotor.get("motorFL_2");
-        motorBR = hardwareMap.dcMotor.get("motorBR_1");
-        motorBL = hardwareMap.dcMotor.get("motorBL_2");
-        jewelDown = hardwareMap.servo.get("jewelDown_1");
-        jewelFlick = hardwareMap.servo.get("jewelFlick_2");
-        pivot = hardwareMap.servo.get("pivot_3");
-        rightArm = hardwareMap.servo.get("rightArm_4");
-        leftArm = hardwareMap.servo.get("leftArm_5");
-        liftPivot = hardwareMap.servo.get("liftPivot_0");
+    public void Setup(setupType setup) throws InterruptedException{
+        switch (setup){
+            case all:
+                motorFR = hardwareMap.dcMotor.get("motorFR_1");
+                motorFL = hardwareMap.dcMotor.get("motorFL_2");
+                motorBR = hardwareMap.dcMotor.get("motorBR_1");
+                motorBL = hardwareMap.dcMotor.get("motorBL_2");
+                pivot = hardwareMap.dcMotor.get("pivot_0");
+                jewelDown = hardwareMap.servo.get("jewelDown_1");
+                jewelFlick = hardwareMap.servo.get("jewelFlick_2");
 
-        jewelDown.setDirection(Servo.Direction.FORWARD);//CHECK AND CHOOSE DIRECTION
-        jewelFlick.setDirection(Servo.Direction.FORWARD);//CHECK AND CHOOSE DIRECTION
-        pivot.setDirection(Servo.Direction.FORWARD);//CHECK AND CHOOSE DIRECTION
-        rightArm.setDirection(Servo.Direction.FORWARD);
+                jewelDown.setDirection(Servo.Direction.FORWARD);//CHECK AND CHOOSE DIRECTION
+                jewelFlick.setDirection(Servo.Direction.FORWARD);//CHECK AND CHOOSE DIRECTION
+                pivot.setDirection(DcMotor.Direction.FORWARD);//CHECK AND CHOOSE DIRECTION
 
 
-        jewelDown.scaleRange(startingPositionDown, endPositionDown);
-        jewelFlick.scaleRange(startingPositionFlick, endPositionFlick);
+                jewelDown.scaleRange(startingPositionDown, endPositionDown);
+                jewelFlick.scaleRange(startingPositionFlick, endPositionFlick);
 
-        jewelDown.setPosition(0);
-        jewelFlick.setPosition(0);
-        motorFR.setDirection(DcMotorSimple.Direction.FORWARD);
-        motorFL.setDirection(DcMotorSimple.Direction.REVERSE);
-        motorBR.setDirection(DcMotorSimple.Direction.FORWARD);
-        motorBL.setDirection(DcMotorSimple.Direction.REVERSE);
+                jewelDown.setPosition(0);
+                jewelFlick.setPosition(0);
 
-        motorFR.setPower(0);
-        motorFL.setPower(0);
-        motorBR.setPower(0);
-        motorBL.setPower(0);
+                motorFR.setDirection(DcMotorSimple.Direction.FORWARD);
+                motorFL.setDirection(DcMotorSimple.Direction.REVERSE);
+                motorBR.setDirection(DcMotorSimple.Direction.FORWARD);
+                motorBL.setDirection(DcMotorSimple.Direction.REVERSE);
+                pivot.setDirection(DcMotorSimple.Direction.FORWARD);
 
 
-        motorFR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorFL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorBR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorBL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        idle();
+                motorFR.setPower(0);
+                motorFL.setPower(0);
+                motorBR.setPower(0);
+                motorBL.setPower(0);
+                pivot.setPower(0);
 
-        motorFR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorFL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorBR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorBL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        telemetry.addLine("SETUP COMPLETE");
-        telemetry.addLine("READY!");
-        telemetry.update();
+
+                motorFR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                motorFL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                motorBR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                motorBL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                pivot.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+                idle();
+
+                motorFR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                motorFL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                motorBR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                motorBL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                pivot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+                telemetry.addLine("SETUP COMPLETE");
+                telemetry.addLine("READY!");
+                telemetry.update();
+                break;
+            case glyph:
+                pivot = hardwareMap.dcMotor.get("pivot_0");
+                pivot.setDirection(DcMotorSimple.Direction.FORWARD);
+                pivot.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                idle();
+                pivot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                pivot.setPower(0);
+                break;
+        }
+
     }
     public void Forward(double speed, double distance,  /*In Revolution*/ double timeoutS, long waitAfter) throws   InterruptedException {
 
@@ -181,6 +201,56 @@ public class Functions extends LinearOpMode{
         }
 
     }
+    public void pivotForward(double speed, double degrees,  /*In Revolution*/ double timeoutS, long waitAfter) throws   InterruptedException {
+
+        int newPivotTarget;
+
+
+
+        // Ensure that the opmode is still active
+        if (opModeIsActive()) {
+            // Determine new target position, and pass to motor controller
+
+
+            newPivotTarget = pivot.getCurrentPosition() + (int) (degrees/360 * COUNTS_PER_MOTOR_REV);
+
+
+            pivot.setTargetPosition(newPivotTarget);
+
+
+            // Turn On RUN_TO_POSITION
+            pivot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+
+            // reset the timeout time and start motion.
+            runtime.reset();
+
+            pivot.setPower(Math.abs(speed));
+
+
+            // keep looping while we are still active, and there is time left, and both motors are running.
+            while (opModeIsActive() &&
+                    (runtime.seconds() < timeoutS) &&
+                    (pivot.isBusy())) {
+
+                // Display it for the driver.
+                // Allow time for other processes to run.
+                idle();
+            }
+
+            waitOneFullHardwareCycle();
+            // Stop all motion;
+            pivot.setPower(0);
+
+
+            // Turn off RUN_TO_POSITION
+            pivot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            sleep(waitAfter);   // optional pause after each move
+
+        }
+
+    }
+
     public void Backward(double speed, double distance,  /*In Revolution*/ double timeoutS, long waitAfter) throws   InterruptedException {
 
         int newFLTarget;
@@ -657,7 +727,7 @@ public class Functions extends LinearOpMode{
         BR(0.7, 10, 8, 2);
         BL(0.7, 10, 8, 2);
     }
-    public void setPivot(treadPivotSettings position) throws InterruptedException{
+    /*public void setPivot(treadPivotSettings position) throws InterruptedException{
         switch (position){
             case lift:
                 pivot.setPosition(0);
@@ -669,7 +739,7 @@ public class Functions extends LinearOpMode{
                 pivot.setPosition(1);
                 break;
         }
-    }
+    }*/
 
 
 }

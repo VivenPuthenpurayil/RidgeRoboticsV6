@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.Functions;
 /**
  * Created by arulgupta on 9/29/17.
  */
-@Autonomous(name="Mecanum Test", group="Test")
+@Autonomous(name="Mecanum Test", group="Test3")
 
 public class Test_Mecanum extends Functions {
 
@@ -16,7 +16,7 @@ public class Test_Mecanum extends Functions {
 
     public void runOpMode() throws InterruptedException{
         super.setRuntime(runtime);
-        Setup();
+        Setup(setupType.drive);
 
         waitForStart();
         runtime.reset();
