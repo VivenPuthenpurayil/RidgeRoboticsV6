@@ -98,9 +98,9 @@ public class Functions extends LinearOpMode{
                 relicClaw = hardwareMap.servo.get("relicClaw_green0");
                 relicWrist = hardwareMap.servo.get("relicWrist_green1");
                 rackPinion = hardwareMap.dcMotor.get("rackPinion_red1");
-
-
-
+                pulleyMotor = hardwareMap.dcMotor.get("pulleyMotor_red2");
+                rightArm = hardwareMap.servo.get("pulleyMotor_rightArm");
+                leftArm = hardwareMap.servo.get("pulleyMotor_leftArm");
 
                 jewelDown.setDirection(Servo.Direction.FORWARD);//CHECK AND CHOOSE DIRECTION
                 jewelFlick.setDirection(Servo.Direction.FORWARD);//CHECK AND CHOOSE DIRECTION
@@ -109,6 +109,7 @@ public class Functions extends LinearOpMode{
                 relicClaw.setDirection(Servo.Direction.FORWARD);
                 relicWrist.setDirection(Servo.Direction.FORWARD);
                 rackPinion.setDirection(DcMotor.Direction.FORWARD);
+                pulleyMotor.setDirection(DcMotor.Direction.FORWARD);
 
 
                 jewelDown.scaleRange(startingPositionDown, endPositionDown);
@@ -126,6 +127,7 @@ public class Functions extends LinearOpMode{
                 pivot.setDirection(DcMotorSimple.Direction.FORWARD);
                 relicArm.setDirection(DcMotorSimple.Direction.FORWARD);
                 rackPinion.setDirection(DcMotorSimple.Direction.FORWARD);
+                pulleyMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
 
                 motorFR.setPower(0);
@@ -135,6 +137,7 @@ public class Functions extends LinearOpMode{
                 pivot.setPower(0);
                 relicArm.setPower(0);
                 rackPinion.setPower(0);
+                pulleyMotor.setPower(0);
 
 
 
@@ -145,6 +148,7 @@ public class Functions extends LinearOpMode{
                 pivot.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 relicArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 rackPinion.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                pulleyMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
 
                 idle();
@@ -156,6 +160,7 @@ public class Functions extends LinearOpMode{
                 pivot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 relicArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 rackPinion.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                pulleyMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
                 telemetry.addLine("SETUP COMPLETE");
@@ -187,6 +192,9 @@ public class Functions extends LinearOpMode{
 
             case rackPinion:
                 rackPinion = hardwareMap.dcMotor.get("rackPinion_red1");
+
+            case pulleyClaw:
+                pulleyMotor = hardwareMap.dcMotor.get("pulleyMotor_red2");
         }
 
     }
