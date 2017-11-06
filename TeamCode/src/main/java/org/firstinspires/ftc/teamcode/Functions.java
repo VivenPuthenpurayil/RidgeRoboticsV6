@@ -48,11 +48,20 @@ public class Functions extends LinearOpMode{
     //Glyph System:
     public DcMotor pivot;
 
+    //Rack and pinion
+    public DcMotor rackPinion;
+
+
+    //Pulley Claw
+    public DcMotor pulleyMotor;
+    public Servo rightArm;
+    public Servo leftArm;
+
     public enum treadPivotSettings{
         lift, drop, center;
     }
     public enum setupType{
-        all, glyph, jewel, relic, drive;
+        all, glyph, jewel, relic, drive, rackPinion, pulleyClaw;
     }
     //---------------SERVO SETUP--------------------------------
 
@@ -88,6 +97,9 @@ public class Functions extends LinearOpMode{
                 relicArm = hardwareMap.dcMotor.get("relicArm_green3");
                 relicClaw = hardwareMap.servo.get("relicClaw_green0");
                 relicWrist = hardwareMap.servo.get("relicWrist_green1");
+                rackPinion = hardwareMap.dcMotor.get("rackPinion_red1");
+
+
 
 
                 jewelDown.setDirection(Servo.Direction.FORWARD);//CHECK AND CHOOSE DIRECTION
@@ -96,6 +108,7 @@ public class Functions extends LinearOpMode{
                 relicArm.setDirection(DcMotorSimple.Direction.FORWARD);
                 relicClaw.setDirection(Servo.Direction.FORWARD);
                 relicWrist.setDirection(Servo.Direction.FORWARD);
+                rackPinion.setDirection(DcMotor.Direction.FORWARD);
 
 
                 jewelDown.scaleRange(startingPositionDown, endPositionDown);
@@ -112,6 +125,7 @@ public class Functions extends LinearOpMode{
                 motorBL.setDirection(DcMotorSimple.Direction.REVERSE);
                 pivot.setDirection(DcMotorSimple.Direction.FORWARD);
                 relicArm.setDirection(DcMotorSimple.Direction.FORWARD);
+                rackPinion.setDirection(DcMotorSimple.Direction.FORWARD);
 
 
                 motorFR.setPower(0);
@@ -120,6 +134,7 @@ public class Functions extends LinearOpMode{
                 motorBL.setPower(0);
                 pivot.setPower(0);
                 relicArm.setPower(0);
+                rackPinion.setPower(0);
 
 
 
@@ -129,6 +144,7 @@ public class Functions extends LinearOpMode{
                 motorBL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 pivot.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 relicArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                rackPinion.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
 
                 idle();
@@ -139,6 +155,7 @@ public class Functions extends LinearOpMode{
                 motorBL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 pivot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 relicArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                rackPinion.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
                 telemetry.addLine("SETUP COMPLETE");
@@ -167,6 +184,9 @@ public class Functions extends LinearOpMode{
                 idle();
 
                 relicArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+            case rackPinion:
+                rackPinion = hardwareMap.dcMotor.get("rackPinion_red1");
         }
 
     }
@@ -235,6 +255,92 @@ public class Functions extends LinearOpMode{
         }
 
     }
+    public void RPForward(double speed, double distance,  /*In Revolution*/ double timeoutS, long waitAfter) throws   InterruptedException {
+
+        int newRPTarget;
+
+
+        // Ensure that the opmode is still active
+        if (opModeIsActive()) {
+            // Determine new target position, and pass to motor controller
+
+
+            newRPTarget = rackPinion.getCurrentPosition() + (int) (distance * COUNTS_PER_INCH / 3);
+
+            rackPinion.setTargetPosition(newRPTarget);
+
+
+            // Turn On RUN_TO_POSITION
+            rackPinion.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            // reset the timeout time and start motion.
+            runtime.reset();
+
+            rackPinion.setPower(Math.abs(speed));
+
+            // keep looping while we are still active, and there is time left, and both motors are running.
+            while (opModeIsActive() &&
+                    (runtime.seconds() < timeoutS) &&
+                    (rackPinion.isBusy()));
+
+                // Display it for the driver.
+                // Allow time for other processes to run.
+                idle();
+            }
+
+            waitOneFullHardwareCycle();
+            // Stop all motion;
+            rackPinion.setPower(0);
+
+            // Turn off RUN_TO_POSITION
+            rackPinion.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            sleep(waitAfter);   // optional pause after each move
+
+        }
+    public void RPBackward(double speed, double distance,  /*In Revolution*/ double timeoutS, long waitAfter) throws   InterruptedException {
+
+        distance = -distance;
+        int newRPTarget;
+
+
+        // Ensure that the opmode is still active
+        if (opModeIsActive()) {
+            // Determine new target position, and pass to motor controller
+
+
+            newRPTarget = rackPinion.getCurrentPosition() + (int) (distance * COUNTS_PER_INCH / 3);
+
+            rackPinion.setTargetPosition(newRPTarget);
+
+
+            // Turn On RUN_TO_POSITION
+            rackPinion.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            // reset the timeout time and start motion.
+            runtime.reset();
+
+            rackPinion.setPower(Math.abs(speed));
+
+            // keep looping while we are still active, and there is time left, and both motors are running.
+            while (opModeIsActive() &&
+                    (runtime.seconds() < timeoutS) &&
+                    (rackPinion.isBusy()));
+
+                // Display it for the driver.
+                // Allow time for other processes to run.
+                idle();
+            }
+
+            waitOneFullHardwareCycle();
+            // Stop all motion;
+            rackPinion.setPower(0);
+
+            // Turn off RUN_TO_POSITION
+            rackPinion.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            sleep(waitAfter);   // optional pause after each move
+
+        }
+
     public void pivotForward(double speed, double degrees,  /*In Revolution*/ double timeoutS, long waitAfter) throws   InterruptedException {
 
         int newPivotTarget;
@@ -743,11 +849,11 @@ public class Functions extends LinearOpMode{
     public void FlickDown(){
         jewelDown.setPosition(1);
         jewelFlick.setPosition(1);
-    };
+    }
     public void FlickUp(){
         jewelDown.setPosition(0);
         jewelFlick.setPosition(0);
-    };
+    }
     public void setRuntime(ElapsedTime time) throws InterruptedException {
         runtime = time;
     }
