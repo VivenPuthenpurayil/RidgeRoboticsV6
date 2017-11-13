@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Test;
+package org.firstinspires.ftc.teamcode.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -8,29 +8,28 @@ import org.firstinspires.ftc.teamcode.Functions;
 /**
  * Created by arulgupta on 9/29/17.
  */
-@Autonomous(name="Mecanum Test", group="Test3")
+@Autonomous(name="Autonomous System red 1", group="Test")
 
-public class Test_Mecanum extends Functions {
+public class AutonomousMainRed1 extends Functions{
 
     public ElapsedTime runtime = new ElapsedTime();
+    public team side = team.red1;
 
     public void runOpMode() throws InterruptedException{
         super.setRuntime(runtime);
-        Setup(setupType.drive);
+        Setup(setupType.jewel);
 
         waitForStart();
         runtime.reset();
         while (opModeIsActive()) {
-            motorFR.setPower(-0.2);
+            jewelDown.setPosition(0.6);
+            jewelFlick.setPosition(0.6);
             sleep(2000);
-            motorFL.setPower(0.2);
-            sleep(2000);
-            motorBR.setPower(-0.2);
-            sleep(2000);
-            motorBL.setPower(0.2);
-            sleep(2000);
+            jewelSensor.enableLed(true);
+            flick(side);
+            sleep(3000);
 
-            MecanumTest();
+
             break;
         }
     }

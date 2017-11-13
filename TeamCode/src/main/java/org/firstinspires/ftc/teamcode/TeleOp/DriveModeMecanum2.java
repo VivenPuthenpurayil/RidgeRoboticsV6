@@ -9,12 +9,12 @@ import org.firstinspires.ftc.teamcode.Functions;
 /**
  * Created by arulgupta on 10/22/17.
  */
-@TeleOp(name="TeleOp", group = "Main")
+@TeleOp(name="TeleOp 2", group = "Main")
 
-public class DriveModeMecanum extends Functions{
+public class DriveModeMecanum2 extends Functions{
     @Override
     public void runOpMode() throws InterruptedException {
-        Setup(setupType.teleop);
+        Setup(setupType.drive);
         waitForStart();
 
         while (opModeIsActive()) {
@@ -35,10 +35,8 @@ public class DriveModeMecanum extends Functions{
             // clip the right/left values so that the values never exceed +/- 1
             int count = 0;
             int counter = 0;
-            int counts = 0;
-            int counte = 0;
             fb = Range.clip(fb, -1, 1);
-            rl  = Range.clip(rl, -1, 1);
+            rl  = Range.clip(rl,  -1, 1);
             y2 = Range.clip(y2, -1, 1);
             x2 = Range.clip(x2, -1, 1);
             // write the values to the motors
@@ -59,15 +57,15 @@ public class DriveModeMecanum extends Functions{
             if(x) {
                 if (fb > rl && fb > -rl && fb > 0.1 & !ls) {
                     //Forward
-                    motorFR.setPower(-fb);
+                    motorFR.setPower(fb);
                     motorBR.setPower(-fb);
                     motorFL.setPower(fb);
-                    motorBL.setPower(fb);
+                    motorBL.setPower(-fb);
                 } else if (fb < rl && fb < -rl && fb < -0.1 & !ls) {
                     //Backward
                     motorFR.setPower(fb);
-                    motorBR.setPower(fb);
-                    motorFL.setPower(-fb);
+                    motorBR.setPower(-fb);
+                    motorFL.setPower(fb);
                     motorBL.setPower(-fb);
                 } else if (fb > rl && fb < -rl && rl < -0.1 & !ls) {
                     //Left
@@ -77,10 +75,10 @@ public class DriveModeMecanum extends Functions{
                     motorBL.setPower(rl);
                 } else if (fb < rl && fb > -rl && rl > 0.1 & !ls) {
                     //Right
-                    motorFR.setPower(rl);
-                    motorBR.setPower(-rl);
-                    motorFL.setPower(rl);
-                    motorBL.setPower(-rl);
+                    motorFR.setPower(-rl);
+                    motorBR.setPower(rl);
+                    motorFL.setPower(-rl);
+                    motorBL.setPower(rl);
                 } else if (gamepad1.left_stick_button) {
                     //Spin CCW
                     motorFR.setPower(0.4);
@@ -98,53 +96,53 @@ public class DriveModeMecanum extends Functions{
                 } else if (y2 > 0.1 && x2 > 0.1 & !rs) {
                     //DIAGONAL TR
                     motorFR.setPower(0);
-                    motorBR.setPower(-p);
-                    motorFL.setPower(p);
+                    motorBR.setPower(p);
+                    motorFL.setPower(-p);
                     motorBL.setPower(0);
 
                 } else if (y2 > 0.1 && x2 < -0.1 & !rs) {
                     //DIAGONAL TL
-                    motorFR.setPower(-p);
-                    motorBR.setPower(0);
-                    motorFL.setPower(0);
-                    motorBL.setPower(p);
-
-                } else if (y2 < -0.1 && x2 > 0.1 & !rs) {
-                    //DIAGONAL BR
                     motorFR.setPower(p);
                     motorBR.setPower(0);
                     motorFL.setPower(0);
                     motorBL.setPower(-p);
 
+                } else if (y2 < -0.1 && x2 > 0.1 & !rs) {
+                    //DIAGONAL BR
+                    motorFR.setPower(-p);
+                    motorBR.setPower(0);
+                    motorFL.setPower(0);
+                    motorBL.setPower(p);
+
                 } else if (y2 < -0.1 && x2 < -0.1 & !rs) {
                     //DIAGONAL BL
                     motorFR.setPower(0);
-                    motorBR.setPower(p);
-                    motorFL.setPower(-p);
+                    motorBR.setPower(-p);
+                    motorFL.setPower(p);
                     motorBL.setPower(0);
 
                 }else if(gamepad1.dpad_up){
+                    motorFR.setPower(0.5);
+                    motorBR.setPower(-0.5);
+                    motorFL.setPower(0.5);
+                    motorBL.setPower(-0.5);
+
+                }else if(gamepad1.dpad_down){
+                    motorFR.setPower(-0.5);
+                    motorBR.setPower(0.5);
+                    motorFL.setPower(-0.5);
+                    motorBL.setPower(0.5);
+
+                }else if(gamepad1.dpad_left){
                     motorFR.setPower(-0.5);
                     motorBR.setPower(-0.5);
                     motorFL.setPower(0.5);
-                    motorBL.setPower(0.5);
-
-                }else if(gamepad1.dpad_down){
-                    motorFR.setPower(0.5);
-                    motorBR.setPower(0.5);
-                    motorFL.setPower(-0.5);
-                    motorBL.setPower(-0.5);
-
-                }else if(gamepad1.dpad_left){
-                    motorFR.setPower(0.5);
-                    motorBR.setPower(-0.5);
-                    motorFL.setPower(-0.5);
                     motorBL.setPower(0.5);
 
                 }else if(gamepad1.dpad_right){
-                    motorFR.setPower(-0.5);
+                    motorFR.setPower(0.5);
                     motorBR.setPower(0.5);
-                    motorFL.setPower(0.5);
+                    motorFL.setPower(-0.5);
                     motorBL.setPower(-0.5);
 
                 }else {
@@ -157,58 +155,58 @@ public class DriveModeMecanum extends Functions{
             else {
                 if (fb > rl && fb > -rl && fb > 0.1 & !ls) {
                     //Forward
-                    motorFR.setPower(-0.2);
-                    motorBR.setPower(-0.2);
-                    motorFL.setPower(0.2);
-                    motorBL.setPower(0.2);
+                    motorFR.setPower(0.2);
+                    motorBR.setPower(0.2);
+                    motorFL.setPower(-0.2);
+                    motorBL.setPower(-0.2);
                     telemetry.addLine("Should be working");
                     telemetry.update();
                 } else if (fb < rl && fb < -rl && fb < -0.1 & !ls) {
                     //Backward
-                    motorFR.setPower(0.2);
-                    motorBR.setPower(0.2);
-                    motorFL.setPower(-0.2);
-                    motorBL.setPower(-0.2);
+                    motorFR.setPower(-0.2);
+                    motorBR.setPower(-0.2);
+                    motorFL.setPower(0.2);
+                    motorBL.setPower(0.2);
                     telemetry.addLine("Should be working");
                     telemetry.update();
                 } else if (fb > rl && fb < -rl && rl < -0.1 & !ls) {
                     //Left
-                    motorFR.setPower(-0.2);
-                    motorBR.setPower(0.2);
-                    motorFL.setPower(-0.2);
-                    motorBL.setPower(0.2);
+                    motorFR.setPower(0.2);
+                    motorBR.setPower(-0.2);
+                    motorFL.setPower(0.2);
+                    motorBL.setPower(-0.2);
                     telemetry.addLine("Should be working");
                     telemetry.update();
                 } else if (fb < rl && fb > -rl && rl > 0.1 & !ls) {
                     //Right
-                    motorFR.setPower(0.2);
-                    motorBR.setPower(-0.2);
-                    motorFL.setPower(0.2);
-                    motorBL.setPower(-0.2);
+                    motorFR.setPower(-0.2);
+                    motorBR.setPower(0.2);
+                    motorFL.setPower(-0.2);
+                    motorBL.setPower(0.2);
                     telemetry.addLine("Should be working");
                     telemetry.update();
                 }else if(gamepad1.dpad_up){
-                    motorFR.setPower(-0.2);
+                    motorFR.setPower(0.2);
                     motorBR.setPower(-0.2);
                     motorFL.setPower(0.2);
-                    motorBL.setPower(0.2);
+                    motorBL.setPower(-0.2);
 
                 }else if(gamepad1.dpad_down){
-                    motorFR.setPower(0.2);
+                    motorFR.setPower(-0.2);
                     motorBR.setPower(0.2);
                     motorFL.setPower(-0.2);
-                    motorBL.setPower(-0.2);
+                    motorBL.setPower(0.2);
 
                 }else if(gamepad1.dpad_left){
                     motorFR.setPower(-0.2);
-                    motorBR.setPower(0.2);
-                    motorFL.setPower(-0.2);
+                    motorBR.setPower(-0.2);
+                    motorFL.setPower(0.2);
                     motorBL.setPower(0.2);
 
                 }else if(gamepad1.dpad_right){
                     motorFR.setPower(0.2);
-                    motorBR.setPower(-0.2);
-                    motorFL.setPower(0.2);
+                    motorBR.setPower(0.2);
+                    motorFL.setPower(-0.2);
                     motorBL.setPower(-0.2);
 
                 }
@@ -234,23 +232,14 @@ public class DriveModeMecanum extends Functions{
                 } else if (y2 > 0.1 && x2 > 0.1 & !rs) {
                     //DIAGONAL TR
                     motorFR.setPower(0);
-                    motorBR.setPower(-0.2);
-                    motorFL.setPower(0.2);
+                    motorBR.setPower(0.2);
+                    motorFL.setPower(-0.2);
                     motorBL.setPower(0);
                     telemetry.addLine("Should be working");
                     telemetry.update();
 
                 } else if (y2 > 0.1 && x2 < -0.1 & !rs) {
                     //DIAGONAL TL
-                    motorFR.setPower(-0.2);
-                    motorBR.setPower(0);
-                    motorFL.setPower(0);
-                    motorBL.setPower(0.2);
-                    telemetry.addLine("Should be working");
-                    telemetry.update();
-
-                } else if (y2 < -0.1 && x2 > 0.1 & !rs) {
-                    //DIAGONAL BR
                     motorFR.setPower(0.2);
                     motorBR.setPower(0);
                     motorFL.setPower(0);
@@ -258,11 +247,20 @@ public class DriveModeMecanum extends Functions{
                     telemetry.addLine("Should be working");
                     telemetry.update();
 
+                } else if (y2 < -0.1 && x2 > 0.1 & !rs) {
+                    //DIAGONAL BR
+                    motorFR.setPower(-0.2);
+                    motorBR.setPower(0);
+                    motorFL.setPower(0);
+                    motorBL.setPower(0.2);
+                    telemetry.addLine("Should be working");
+                    telemetry.update();
+
                 } else if (y2 < -0.1 && x2 < -0.1 & !rs) {
                     //DIAGONAL BL
                     motorFR.setPower(0);
-                    motorBR.setPower(0.2);
-                    motorFL.setPower(-0.2);
+                    motorBR.setPower(-0.2);
+                    motorFL.setPower(0.2);
                     motorBL.setPower(0);
                     telemetry.addLine("Should be working");
                     telemetry.update();
@@ -277,141 +275,54 @@ public class DriveModeMecanum extends Functions{
             telemetry.addData("CRAWL MODE: ", gamepad1.right_bumper);
             telemetry.update();
 //--------------------- ----------------------------------------------
-            //Collection Control/*
-            /*
-            if(gamepad2.right_bumper && count == 0){
-                relicArm.setPower(0.2)    ;
+            //Collection Control
+            /*if(gamepad2.right_bumper && count == 0){
+                collection.setPower(0.7)    ;
+                spinner.setPower(-0.4);
                 count = 1;
 
             }
             else if(!gamepad2.right_bumper && gamepad2.left_bumper){
-                relicArm.setPower(-0.2);
+                collection.setPower(-0.2);
+                spinner.setPower(0.2);
                 count = 0;
             }
             else if(!gamepad2.right_bumper & !gamepad2.left_bumper){
-                relicArm.setPower(0);
+                collection.setPower(0);
+                spinner.setPower(0);
                 count = 0;
             }
             else{
                 count = 1;
             }
-            count = 1;*/
+            count = 1;
 //--------------------------------------------------------------------------
             //Flicker Control
-            /*if(gamepad2.y && counter == 0){
-                relicWrist.setPosition(0.8);
+            if(gamepad2.y && counter == 0){
+                flicker.setPower(-0.2);
 
                 counter = 1;
             }
             else if(!gamepad2.y && gamepad2.a){
-                relicWrist.setPosition(-0.2);
+                flicker.setPower(0.5);
                 counter = 0;
             }
             else if(!gamepad2.y & !gamepad2.a){
-                relicWrist.setPosition(0);
+                flicker.setPower(0);
                 counter = 0;
             }
             else{
                 counter = 1;
             }
             counter = 1;
-            */
-
-            /*if(gamepad2.x && counts == 0){
-                relicClaw.setPosition(0.8);
-
-                counts = 1;
-            }
-            else if(!gamepad2.x && gamepad2.b){
-                relicClaw.setPosition(-0.2);
-                counts = 0;
-            }
-            else if(!gamepad2.x & !gamepad2.b){
-                relicClaw.setPosition(0);
-                counts = 0;
-            }
-            else{
-                counts = 1;
-            }
-            counts = 1;
-*/
-            //
-            if((gamepad2.y) && count == 0){
-                lift.setPower(0.5);
-                counte = 1;
-
-            }
-            else if(!(gamepad2.y) && (gamepad2.a)){
-                lift.setPower(-0.5);
-                counte = 0;
-            }
-            else if(!(gamepad2.y) & !(gamepad2.a)){
-                lift.setPower(0);
-
-                counte = 0;
-            }
-            else{
-                counte = 1;
-            }
-            counte = 1;
-            /////
-            /*
-            if(gamepad2.right_bumper && count == 0){
-                lift.setPower(0.2)    ;
-                count = 1;
-
-            }
-            else if(!gamepad2.right_bumper && gamepad2.left_bumper){
-                lift.setPower(-0.2);
-                count = 0;
-            }
-            else if(!gamepad2.right_bumper & !gamepad2.left_bumper){
-                lift.setPower(0);
-                count = 0;
-            }
-            else{
-                count = 1;
-            }
-            count = 1;*/
-///
-            if(gamepad2.x && counts == 0){
-                rightArm.setPosition(rightArm.getPosition()+0.005);
-                leftArm.setPosition(leftArm.getPosition()+0.005);
-                counts = 1;
-            }
-            else if(!gamepad2.x && gamepad2.b){
-                rightArm.setPosition(rightArm.getPosition()-0.005);
-                leftArm.setPosition(leftArm.getPosition()-0.005);
-                counts = 0;
-            }
-            else if(!gamepad2.x & !gamepad2.b){
-                counts = 0;
-            }
-            else{
-                counts = 1;
-            }
-            counts = 1;
-
-            if(gamepad1.x && counts == 0){
-                balanceR.setPosition(balanceR.getPosition()+0.005);
-                balanceL.setPosition(balanceL.getPosition()+0.005);
-                counts = 1;
-            }
-            else if(!gamepad1.x && gamepad1.b){
-                balanceR.setPosition(balanceR.getPosition()-0.005);
-                balanceL.setPosition(balanceL.getPosition()-0.005);
-                counts = 0;
-            }
-            else if(!gamepad1.x & !gamepad1.b){
-                counts = 0;
-            }
-            else{
-                counts = 1;
-            }
-            counts = 1;
-
 //-------------------------------------------------------------------
+            if (gamepad2.b){
+                Release(1000);
+            }
+            if (gamepad2.x){
 
+                Flick(0.6, 1, 3, 100);
+            }*/
             telemetry.addData("Text", "DriveMode");
             telemetry.addData("fb: ", fb);
             telemetry.addData("rl: ", rl);

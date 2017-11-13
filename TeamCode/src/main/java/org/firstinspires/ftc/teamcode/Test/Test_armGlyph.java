@@ -5,6 +5,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Functions;
 
+import javax.microedition.khronos.opengles.GL;
+
 /**
  * Created by arulgupta on 9/29/17.
  */
@@ -21,8 +23,7 @@ public class Test_armGlyph extends Functions {
         waitForStart();
         runtime.reset();
         while (opModeIsActive()) {
-            pivotForward(0.4, 60, 5, 3);
-            sleep(50);
+            GlyphTest();
             break;
         }
     }

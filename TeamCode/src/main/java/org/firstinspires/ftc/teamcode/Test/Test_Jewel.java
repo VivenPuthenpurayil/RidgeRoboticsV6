@@ -16,16 +16,18 @@ public class Test_Jewel extends Functions {
 
     public void runOpMode() throws InterruptedException{
         super.setRuntime(runtime);
-        Setup(setupType.glyph);
+        Setup(setupType.jewel);
 
         waitForStart();
         runtime.reset();
         while (opModeIsActive()) {
-            FlickDown();
-            sleep(5000);
-            FlickUp();
+            jewelDown.setPosition(0.6);
+            jewelFlick.setPosition(0.6);
             sleep(2000);
-
+            jewelSensor.enableLed(true);
+            flick(team.blue1);
+            sleep(3000);
+            flick(team.red1);
             break;
         }
     }

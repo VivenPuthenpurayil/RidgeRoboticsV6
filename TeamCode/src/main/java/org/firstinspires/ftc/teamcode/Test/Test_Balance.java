@@ -1,36 +1,30 @@
 package org.firstinspires.ftc.teamcode.Test;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Functions;
 
 /**
- * Created by vikramagrawal on 9/29/17.
+ * Created by arulgupta on 9/29/17.
  */
-@Autonomous(name="Rack and Pinion Test", group="Test")
+@Autonomous(name="Balance System Test", group="Test")
 
-public class Test_RackAndPinion extends Functions {
+public class Test_Balance extends Functions {
 
     public ElapsedTime runtime = new ElapsedTime();
 
     public void runOpMode() throws InterruptedException{
         super.setRuntime(runtime);
-        Setup(setupType.relic);
+        Setup(setupType.glyph);
 
         waitForStart();
         runtime.reset();
         while (opModeIsActive()) {
-
-            rackPinion.setPower(1);
-            RPForward(0.4,9,6,500);
-            RPBackward(0.4,9,6,500);
-
-
-
+            balanceL.setPosition(1);
+            balanceR.setPosition(1);
+            sleep(3000);
             break;
         }
     }
-
 }
