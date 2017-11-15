@@ -72,7 +72,15 @@ public class Functions extends LinearOpMode{
     public String relicArmS = "relicArm_green2";
     //Glyph System:
 
-    //public DcMotor pivot;
+    public DcMotor pivot;
+    public DcMotor rightTread;
+    public DcMotor leftTread;
+
+    public String pivotS = "pivotMotor";
+    public String rightTreadS = "rightTread";
+    public String leftTreadS = "leftTread";
+
+
     public DcMotor lift;
 
     public Servo rightArm;
@@ -103,7 +111,7 @@ public class Functions extends LinearOpMode{
         lift, drop, center;
     }
     public enum setupType{
-        all, glyph, jewel, relic, drive, teleop;
+        all, glyph, jewel, relic, drive, teleop, pivot;
     }
     public enum team{
         red1, red2, blue1, blue2;
@@ -1227,6 +1235,11 @@ public class Functions extends LinearOpMode{
                 telemetry.addLine("READY!");
                 telemetry.update();
                 break;
+            case pivot:
+                pivot = motor(pivot, hardwareMap, pivotS, DcMotorSimple.Direction.FORWARD);
+                rightTread = motor(rightTread, hardwareMap, rightTreadS, DcMotorSimple.Direction.FORWARD);
+                leftTread = motor(leftTread, hardwareMap, leftTreadS, DcMotorSimple.Direction.FORWARD);
+
         }
 
 
