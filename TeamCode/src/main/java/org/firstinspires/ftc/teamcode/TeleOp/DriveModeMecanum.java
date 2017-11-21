@@ -56,9 +56,11 @@ public class DriveModeMecanum extends Functions{
             bPrevState = bCurrState;
 
 
+
             if(x) {
                 if (fb > rl && fb > -rl && fb > 0.1 & !ls) {
                     //Forward
+
                     motorFR.setPower(-fb);
                     motorBR.setPower(-fb);
                     motorFL.setPower(fb);
@@ -336,25 +338,7 @@ public class DriveModeMecanum extends Functions{
             counts = 1;
 */
             //
-            if((gamepad2.y) && count == 0){
-                lift.setPower(0.5);
-                counte = 1;
 
-            }
-            else if(!(gamepad2.y) && (gamepad2.a)){
-                lift.setPower(-0.5);
-                counte = 0;
-            }
-            else if(!(gamepad2.y) & !(gamepad2.a)){
-                lift.setPower(0);
-
-                counte = 0;
-            }
-            else{
-                counte = 1;
-            }
-            counte = 1;
-            /////
             /*
             if(gamepad2.right_bumper && count == 0){
                 lift.setPower(0.2)    ;
@@ -374,41 +358,9 @@ public class DriveModeMecanum extends Functions{
             }
             count = 1;*/
 ///
-            if(gamepad2.x && counts == 0){
-                rightArm.setPosition(rightArm.getPosition()+0.005);
-                leftArm.setPosition(leftArm.getPosition()+0.005);
-                counts = 1;
-            }
-            else if(!gamepad2.x && gamepad2.b){
-                rightArm.setPosition(rightArm.getPosition()-0.005);
-                leftArm.setPosition(leftArm.getPosition()-0.005);
-                counts = 0;
-            }
-            else if(!gamepad2.x & !gamepad2.b){
-                counts = 0;
-            }
-            else{
-                counts = 1;
-            }
+
             counts = 1;
 
-            if(gamepad1.x && counts == 0){
-                balanceR.setPosition(balanceR.getPosition()+0.005);
-                balanceL.setPosition(balanceL.getPosition()+0.005);
-                counts = 1;
-            }
-            else if(!gamepad1.x && gamepad1.b){
-                balanceR.setPosition(balanceR.getPosition()-0.005);
-                balanceL.setPosition(balanceL.getPosition()-0.005);
-                counts = 0;
-            }
-            else if(!gamepad1.x & !gamepad1.b){
-                counts = 0;
-            }
-            else{
-                counts = 1;
-            }
-            counts = 1;
 
 //-------------------------------------------------------------------
 

@@ -21,11 +21,11 @@ public class Test_Mecanum extends Functions {
         waitForStart();
         runtime.reset();
         while (opModeIsActive()) {
-            motorFR.setPower(-0.2);
+            motorFR.setPower(0.2);
             sleep(2000);
             motorFL.setPower(0.2);
             sleep(2000);
-            motorBR.setPower(-0.2);
+            motorBR.setPower(0.2);
             sleep(2000);
             motorBL.setPower(0.2);
             sleep(2000);

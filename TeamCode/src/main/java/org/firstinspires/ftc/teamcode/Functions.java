@@ -12,6 +12,9 @@ import com.qualcomm.robotcore.hardware.LightSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 
@@ -48,10 +51,10 @@ public class Functions extends LinearOpMode{
     public DcMotor motorBR;
     public DcMotor motorBL;
 
-    public String motorFRS = "motorFR_red3";
+    public String motorFRS = "motorFR_green1";
     public String motorFLS = "motorFL_red2";
-    public String motorBRS = "motorBR_green1";
-    public String motorBLS = "motorBL_green0";
+    public String motorBRS = "motorBR_green0";
+    public String motorBLS = "motorBL_red1";
 
 
     //Jewel Systems:
@@ -60,53 +63,57 @@ public class Functions extends LinearOpMode{
     public ColorSensor jewelSensor;
 
     public String jewelDownS = "jewelDown_green5";
-    public String jewelFlickS = "jewelFlick_green4";
-    public String jewelSensorS = "colorSensor_green1";
+    public String jewelFlickS = "jewelFlick_red5";
+    public String jewelSensorS = "colorSensor_red1";
     //Relic Systems:
-    public Servo  relicClaw;
-    public Servo relicWrist;
-    public DcMotor relicArm;
 
-    public String  relicClawS = "relicClaw_green2";
-    public String relicWristS = "relicWrist_green0";
-    public String relicArmS = "relicArm_green2";
+        // Empty rn
+
     //Glyph System:
 
     public DcMotor pivot;
     public DcMotor rightTread;
     public DcMotor leftTread;
 
-    public String pivotS = "pivotMotor";
-    public String rightTreadS = "rightTread";
-    public String leftTreadS = "leftTread";
+    public String pivotS = "pivotMotor_green2";
+    public String rightTreadS = "rightTread_green3";
+    public String leftTreadS = "leftTread_red3";
 
+    public double rightArmPosition = 0.4;
+    public double leftArmPosition = 0.4;
 
-    public DcMotor lift;
-
-    public Servo rightArm;
-    public Servo leftArm;
-
-    public String liftS = "lift_red1";
-    public String rightArmS = "rightArm_red1";
-    public String leftArmS = "leftArm_red2";
-
-    public double rightArmP = 0.4;
-    public double leftArmP = 0.4;
-
-    public double balanceRP = 1;
-    public double balanceLP = 0;
 
     //BALANCE BOARD SYSTEMS:
-    public Servo balanceR;
-    public Servo balanceL;
 
 
 
-    public String balanceRS = "balanceR_green3";
-    public String balanceLS = "balanceL_red0";
+    DcMotor[] drivetrain = {motorFR, motorFL, motorBR, motorBL};
 
+    public enum movements{
 
+        forward(-1, 1, -1, 1),
+        backward(1, -1, 1, -1),
+        right(1, 1, -1, -1),
+        left(-1, -1, 1, 1),
+        tr(),
+        tl(),
+        br(),
+        bl(),
+        glyphUp(),
+        glyphDown(),
+        treadUp(),
+        treadDown();
 
+        private final int[] directions;
+
+        movements(int... signs){
+            this.directions = signs;
+        }
+
+        private int[] getSigns(){
+            return directions;
+        }
+    }
     public enum treadPivotSettings{
         lift, drop, center;
     }
@@ -126,8 +133,8 @@ public class Functions extends LinearOpMode{
     private double endPositionDown = 1; //CHECK AND CHOOSE POSITION
     private double endPositionFlick = 1; //CHECK AND CHOOSE POSITION
 
-    private double jewelDownP = 0.75;
-    private double jewelFlickP = 0.5;
+    private double jewelDownPosition = 0.75;
+    private double jewelFlickPosition = 0.5;
 
 
 
@@ -138,6 +145,91 @@ public class Functions extends LinearOpMode{
     }
     public void runOpMode() throws InterruptedException{
         Setup(setupType.all);
+
+    }
+
+    public void Setup(setupType setup) throws InterruptedException{
+        switch (setup){
+            case all:
+
+                //DRIVETRAIN SETUP
+                motorFR = motor(motorFR, hardwareMap, motorFRS, DcMotor.Direction.FORWARD);
+                motorFL = motor(motorFL, hardwareMap, motorFLS, DcMotor.Direction.FORWARD);
+                motorBR = motor(motorBR, hardwareMap, motorBRS, DcMotor.Direction.FORWARD);
+                motorBL = motor(motorBL, hardwareMap, motorBLS, DcMotor.Direction.FORWARD);
+
+                //GLYPH SETUP
+
+                pivot = motor(pivot, hardwareMap, pivotS, DcMotorSimple.Direction.FORWARD);
+
+                //JEWEL SETUP
+                jewelDown = servo(jewelDown, hardwareMap, jewelDownS, Servo.Direction.FORWARD, startingPositionDown, endPositionDown, jewelDownPosition);
+                jewelFlick = servo(jewelFlick, hardwareMap, jewelFlickS, Servo.Direction.FORWARD, startingPositionFlick, endPositionFlick, jewelFlickPosition);
+
+                jewelSensor = colorSensor(jewelSensor, hardwareMap, jewelSensorS, true);
+
+
+                //ENCODER-BASED MOTORS
+                motorEncoderMode(motorFR, motorFL, motorBR, motorBL, pivot);
+
+                telemetry.addLine("SETUP COMPLETE");
+                telemetry.addLine("READY!");
+                telemetry.update();
+                break;
+            case relic:
+
+
+
+            case jewel:
+                jewelDown = servo(jewelDown, hardwareMap, jewelDownS, Servo.Direction.FORWARD, startingPositionDown, endPositionDown, jewelDownPosition);
+                jewelFlick = servo(jewelFlick, hardwareMap, jewelFlickS, Servo.Direction.FORWARD, startingPositionDown, endPositionDown, jewelFlickPosition);
+
+                jewelSensor = colorSensor(jewelSensor, hardwareMap, jewelSensorS, true);
+                sleep(2000);
+            case drive:
+                motorFR = motor(motorFR, hardwareMap, motorFRS, DcMotor.Direction.FORWARD);
+                motorFL = motor(motorFL, hardwareMap, motorFLS, DcMotor.Direction.FORWARD);
+                motorBR = motor(motorBR, hardwareMap, motorBRS, DcMotor.Direction.FORWARD);
+                motorBL = motor(motorBL, hardwareMap, motorBLS, DcMotor.Direction.FORWARD);
+
+                motorEncoderMode(motorFR, motorFL, motorBR, motorBL);
+            case teleop:
+                //DRIVETRAIN SETUP
+                motorFR = motor(motorFR, hardwareMap, motorFRS, DcMotor.Direction.FORWARD);
+                motorFL = motor(motorFL, hardwareMap, motorFLS, DcMotor.Direction.FORWARD);
+                motorBR = motor(motorBR, hardwareMap, motorBRS, DcMotor.Direction.FORWARD);
+                motorBL = motor(motorBL, hardwareMap, motorBLS, DcMotor.Direction.FORWARD);
+
+                //GLYPH SETUP
+
+                //RELIC SETUP
+
+                pivot = motor(pivot, hardwareMap, pivotS, DcMotorSimple.Direction.FORWARD);
+
+                motorEncoderMode(motorFR, motorFL, motorBR, motorBL, pivot);
+                //JEWEL SETUP
+                jewelDown = servo(jewelDown, hardwareMap, jewelDownS, Servo.Direction.FORWARD, startingPositionDown, endPositionDown, jewelDownPosition);
+                jewelFlick = servo(jewelFlick, hardwareMap, jewelFlickS, Servo.Direction.FORWARD, startingPositionFlick, endPositionFlick, jewelFlickPosition);
+
+                jewelSensor = colorSensor(jewelSensor, hardwareMap, jewelSensorS, true);
+
+                //ENCODER-BASED MOTORS
+                motorEncoderMode(motorFR, motorFL, motorBR, motorBL, pivot);
+
+                telemetry.addLine("SETUP COMPLETE");
+                telemetry.addLine("READY!");
+                telemetry.update();
+                break;
+            case glyph:
+                pivot = motor(pivot, hardwareMap, pivotS, DcMotorSimple.Direction.FORWARD);
+
+                rightTread = motor(rightTread, hardwareMap, rightTreadS, DcMotorSimple.Direction.FORWARD);
+                leftTread = motor(leftTread, hardwareMap, leftTreadS, DcMotorSimple.Direction.FORWARD);
+
+                motorEncoderMode(pivot, rightTread, leftTread);
+
+        }
+
 
     }
 
@@ -207,7 +299,6 @@ public class Functions extends LinearOpMode{
         }
 
     }
-
     public void Backward(double speed, double distance,  /*In Revolution*/ double timeoutS, long waitAfter) throws   InterruptedException {
 
         int newFLTarget;
@@ -286,7 +377,7 @@ public class Functions extends LinearOpMode{
             // Determine new target position, and pass to motor controller
 
 
-            newFRTarget = motorFR.getCurrentPosition() + (int) (-distance * COUNTS_PER_INCH);
+            newFRTarget = motorFR.getCurrentPosition() + (int) (distance * COUNTS_PER_INCH);
             newFLTarget = motorFL.getCurrentPosition() + (int) (distance * COUNTS_PER_INCH);
             newBRTarget = motorBR.getCurrentPosition() + (int) (-distance * COUNTS_PER_INCH);
             newBLTarget = motorBL.getCurrentPosition() + (int) (-distance * COUNTS_PER_INCH);
@@ -353,7 +444,7 @@ public class Functions extends LinearOpMode{
 
             newFRTarget = motorFR.getCurrentPosition() + (int) (-distance * COUNTS_PER_INCH);
             newFLTarget = motorFL.getCurrentPosition() + (int) (-distance * COUNTS_PER_INCH);
-            newBRTarget = motorBR.getCurrentPosition() + (int) (-distance * COUNTS_PER_INCH);
+            newBRTarget = motorBR.getCurrentPosition() + (int) (distance * COUNTS_PER_INCH);
             newBLTarget = motorBL.getCurrentPosition() + (int) (distance * COUNTS_PER_INCH);
 
             motorFR.setTargetPosition(newFRTarget);
@@ -403,6 +494,8 @@ public class Functions extends LinearOpMode{
         }
 
     }
+
+    //CAN BE ALTERED FOR 45˚ MOVEMENT
     public void TR(double speed, double distance,  /*In Revolution*/ double timeoutS, long waitAfter) throws   InterruptedException {
 
         int newFLTarget;
@@ -795,222 +888,12 @@ public class Functions extends LinearOpMode{
 
     }
 
-    public void lift(double speed, double distance,  /*In Revolution*/ double timeoutS, long waitAfter) throws   InterruptedException {
+    public void pivot(double speed, double distance, double timeoutS, long waitAfter){
 
-        int newLiftTarget;
-
-
-
-        // Ensure that the opmode is still active
-        if (opModeIsActive()) {
-            // Determine new target position, and pass to motor controller
-
-
-            newLiftTarget = lift.getCurrentPosition() + (int) (distance * COUNTS_PER_INCH);
-
-
-            motorFR.setTargetPosition(newLiftTarget);
-
-
-            // Turn On RUN_TO_POSITION
-            lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-
-            // reset the timeout time and start motion.
-            runtime.reset();
-
-            lift.setPower(Math.abs(speed));
-
-
-            // keep looping while we are still active, and there is time left, and both motors are running.
-            while (opModeIsActive() &&
-                    (runtime.seconds() < timeoutS) &&
-                    (lift.isBusy())) {
-
-                // Display it for the driver.
-                // Allow time for other processes to run.
-                idle();
-            }
-
-            waitOneFullHardwareCycle();
-            // Stop all motion;
-            lift.setPower(0);
-
-
-            // Turn off RUN_TO_POSITION
-            lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-            sleep(waitAfter);   // optional pause after each move
-
-        }
-
-    }
-    public void drop(double speed, double distance,  /*In Revolution*/ double timeoutS, long waitAfter) throws   InterruptedException {
-
-        int newLiftTarget;
-
-
-
-        // Ensure that the opmode is still active
-        if (opModeIsActive()) {
-            // Determine new target position, and pass to motor controller
-
-
-            newLiftTarget = lift.getCurrentPosition() + (int) (-distance * COUNTS_PER_INCH);
-
-
-            motorFR.setTargetPosition(newLiftTarget);
-
-
-            // Turn On RUN_TO_POSITION
-            lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-
-            // reset the timeout time and start motion.
-            runtime.reset();
-
-            lift.setPower(Math.abs(speed));
-
-
-            // keep looping while we are still active, and there is time left, and both motors are running.
-            while (opModeIsActive() &&
-                    (runtime.seconds() < timeoutS) &&
-                    (lift.isBusy())) {
-
-                // Display it for the driver.
-                // Allow time for other processes to run.
-                idle();
-            }
-
-            waitOneFullHardwareCycle();
-            // Stop all motion;
-            lift.setPower(0);
-
-
-            // Turn off RUN_TO_POSITION
-            lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-            sleep(waitAfter);   // optional pause after each move
-
-        }
-
-    }
-
-    public void relicCW(double speed, double distance,  /*In Revolution*/ double timeoutS, long waitAfter) throws InterruptedException {
-
-        int newRelicTarget;
-
-
-
-        // Ensure that the opmode is still active
-        if (opModeIsActive()) {
-            // Determine new target position, and pass to motor controller
-
-
-            newRelicTarget = relicArm.getCurrentPosition() + (int) (distance * COUNTS_PER_INCH);
-
-
-            relicArm.setTargetPosition(newRelicTarget);
-
-
-            // Turn On RUN_TO_POSITION
-            relicArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-
-            // reset the timeout time and start motion.
-            runtime.reset();
-
-            relicArm.setPower(Math.abs(speed));
-
-
-            // keep looping while we are still active, and there is time left, and both motors are running.
-            while (opModeIsActive() &&
-                    (runtime.seconds() < timeoutS) &&
-                    (relicArm.isBusy())) {
-
-                // Display it for the driver.
-                // Allow time for other processes to run.
-                idle();
-            }
-
-            waitOneFullHardwareCycle();
-            // Stop all motion;
-            relicArm.setPower(0);
-
-
-            // Turn off RUN_TO_POSITION
-            relicArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-            sleep(waitAfter);   // optional pause after each move
-
-        }
-    }
-    public void relicCCW(double speed, double distance,  /*In Revolution*/ double timeoutS, long waitAfter) throws InterruptedException {
-
-        int newRelicTarget;
-
-
-
-        // Ensure that the opmode is still active
-        if (opModeIsActive()) {
-            // Determine new target position, and pass to motor controller
-
-
-            newRelicTarget = relicArm.getCurrentPosition() + (int) (-distance * COUNTS_PER_INCH);
-
-
-            relicArm.setTargetPosition(newRelicTarget);
-
-
-            // Turn On RUN_TO_POSITION
-            relicArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-
-            // reset the timeout time and start motion.
-            runtime.reset();
-
-            relicArm.setPower(Math.abs(speed));
-
-
-            // keep looping while we are still active, and there is time left, and both motors are running.
-            while (opModeIsActive() &&
-                    (runtime.seconds() < timeoutS) &&
-                    (relicArm.isBusy())) {
-
-                // Display it for the driver.
-                // Allow time for other processes to run.
-                idle();
-            }
-
-            waitOneFullHardwareCycle();
-            // Stop all motion;
-            relicArm.setPower(0);
-
-
-            // Turn off RUN_TO_POSITION
-            relicArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-            sleep(waitAfter);   // optional pause after each move
-
-        }
     }
 
     //GLYPH FUNCTIONS
-    public void pickUpGlyph() throws InterruptedException{
-        rightArm.setPosition(1);
-        leftArm.setPosition(1);
 
-    }
-    public void letGoGlyph() throws InterruptedException{
-
-        rightArm.setPosition(0.5);
-        leftArm.setPosition(0.5);
-
-    }
-    public void closeArms() throws InterruptedException{
-        rightArm.setPosition(0);
-        leftArm.setPosition(0);
-    }
 
     //JEWEL FUNCTIONS
     public void flick(team side) throws InterruptedException{
@@ -1062,22 +945,6 @@ public class Functions extends LinearOpMode{
     }
 
     //RELIC FUNCTIONS
-    public void moveWrist(double speed /* 1 is forward, 0 is backward*/, long length, long waitAfter) throws InterruptedException{
-        relicWrist.setPosition(1);
-        sleep(length);
-        relicWrist.setPosition(0.5);
-        sleep(waitAfter);
-
-
-    }
-    public void moveClaw(double speed /* 1 is forward, 0 is backward*/, long length, long waitAfter) throws InterruptedException{
-        relicClaw.setPosition(1);
-        sleep(length);
-        relicClaw.setPosition(0.5);
-        sleep(waitAfter);
-
-
-    }
 
     //FUNCTIONS TO BE USED IN CHILD CLASSES FOR SETUP
     public void setRuntime(ElapsedTime time) throws InterruptedException {
@@ -1096,12 +963,6 @@ public class Functions extends LinearOpMode{
         BL(0.7, 10, 8, 2000);
         CW(0.7, 18, 7, 2000);
         CCW(0.7, 18, 7, 2000);
-    }
-    public void GlyphTest() throws InterruptedException{
-        pickUpGlyph();
-        lift(0.7, 6, 7, 1000);
-        letGoGlyph();
-        drop(0.7, 6, 7, 1000);
     }
     public void JewelTest() throws InterruptedException{
         flick(team.blue1);
@@ -1130,121 +991,7 @@ public class Functions extends LinearOpMode{
         }
     }*/
 
-    //SETUP FUNCTIONS
-    public void Setup(setupType setup) throws InterruptedException{
-        switch (setup){
-            case all:
-
-                //DRIVETRAIN SETUP
-                motorFR = motor(motorFR, hardwareMap, motorFRS, DcMotor.Direction.FORWARD);
-                motorFL = motor(motorFL, hardwareMap, motorFLS, DcMotor.Direction.FORWARD);
-                motorBR = motor(motorBR, hardwareMap, motorBRS, DcMotor.Direction.FORWARD);
-                motorBL = motor(motorBL, hardwareMap, motorBLS, DcMotor.Direction.FORWARD);
-
-                //GLYPH SETUP
-                lift = motor(lift, hardwareMap, liftS, DcMotorSimple.Direction.FORWARD);
-
-                rightArm = servo(rightArm, hardwareMap, rightArmS, Servo.Direction.FORWARD, 0, 1, rightArmP);
-                leftArm = servo(leftArm, hardwareMap, leftArmS, Servo.Direction.FORWARD, 0, 1, leftArmP);
-                //RELIC SETUP
-                relicArm = motor(relicArm, hardwareMap, relicArmS, DcMotorSimple.Direction.FORWARD);
-                //relicClaw = servo(relicClaw, hardwareMap, relicClawS, Servo.Direction.FORWARD, 0, 1, 0.5);
-                //relicWrist = servo(relicWrist, hardwareMap, relicWristS, Servo.Direction.FORWARD, 0, 1, 0.5);
-
-                //pivot = motor(pivot, hardwareMap, "pivot_0", DcMotorSimple.Direction.FORWARD);
-
-                //JEWEL SETUP
-                jewelDown = servo(jewelDown, hardwareMap, jewelDownS, Servo.Direction.FORWARD, startingPositionDown, endPositionDown, jewelDownP);
-                jewelFlick = servo(jewelFlick, hardwareMap, jewelFlickS, Servo.Direction.FORWARD, startingPositionFlick, endPositionFlick, jewelFlickP);
-
-                jewelSensor = colorSensor(jewelSensor, hardwareMap, jewelSensorS, true);
-
-                //BALANCE SETUP
-
-                balanceR = servo(balanceR, hardwareMap, balanceRS, Servo.Direction.FORWARD, 0, 1, balanceRP);
-                balanceL = servo(balanceL, hardwareMap, balanceLS, Servo.Direction.FORWARD, 0, 1, balanceLP);
-
-                //ENCODER-BASED MOTORS
-                motorEncoderMode(motorFR, motorFL, motorBR, motorBL/*, pivot*/, relicArm, lift);
-
-                telemetry.addLine("SETUP COMPLETE");
-                telemetry.addLine("READY!");
-                telemetry.update();
-                break;
-            case glyph:
-                lift = motor(lift, hardwareMap, liftS, DcMotorSimple.Direction.FORWARD);
-                rightArm = servo(rightArm, hardwareMap, rightArmS, Servo.Direction.FORWARD, 0, 1, rightArmP);
-                leftArm = servo(leftArm, hardwareMap, leftArmS, Servo.Direction.FORWARD, 0, 1, leftArmP);
-                balanceR = servo(balanceR, hardwareMap, balanceRS, Servo.Direction.FORWARD, 0, 1, balanceRP);
-                balanceL = servo(balanceL, hardwareMap, balanceLS, Servo.Direction.FORWARD, 0, 1, balanceLP);
-                motorEncoderMode(lift);
-                break;
-            case relic:
-                relicArm = motor(relicArm, hardwareMap, relicArmS, DcMotorSimple.Direction.FORWARD);
-
-                //relicClaw = servo(relicClaw, hardwareMap, relicClawS, Servo.Direction.FORWARD, 0, 1, 0.5);
-                //relicWrist = servo(relicWrist, hardwareMap, relicWristS, Servo.Direction.FORWARD, 0, 1, 0.5);
-                motorEncoderMode(relicArm);
-            case jewel:
-                jewelDown = servo(jewelDown, hardwareMap, jewelDownS, Servo.Direction.FORWARD, startingPositionDown, endPositionDown, jewelDownP);
-                jewelFlick = servo(jewelFlick, hardwareMap, jewelFlickS, Servo.Direction.FORWARD, startingPositionDown, endPositionDown, jewelFlickP);
-
-                jewelSensor = colorSensor(jewelSensor, hardwareMap, jewelSensorS, true);
-                sleep(2000);
-            case drive:
-                motorFR = motor(motorFR, hardwareMap, motorFRS, DcMotor.Direction.FORWARD);
-                motorFL = motor(motorFL, hardwareMap, motorFLS, DcMotor.Direction.FORWARD);
-                motorBR = motor(motorBR, hardwareMap, motorBRS, DcMotor.Direction.FORWARD);
-                motorBL = motor(motorBL, hardwareMap, motorBLS, DcMotor.Direction.FORWARD);
-
-                motorEncoderMode(motorFR, motorFL, motorBR, motorBL);
-            case teleop:
-                //DRIVETRAIN SETUP
-                motorFR = motor(motorFR, hardwareMap, motorFRS, DcMotor.Direction.FORWARD);
-                motorFL = motor(motorFL, hardwareMap, motorFLS, DcMotor.Direction.FORWARD);
-                motorBR = motor(motorBR, hardwareMap, motorBRS, DcMotor.Direction.FORWARD);
-                motorBL = motor(motorBL, hardwareMap, motorBLS, DcMotor.Direction.FORWARD);
-
-                //GLYPH SETUP
-                lift = motor(lift, hardwareMap, liftS, DcMotorSimple.Direction.FORWARD);
-
-                rightArm = servo(rightArm, hardwareMap, rightArmS, Servo.Direction.FORWARD, 0, 1, rightArmP);
-                leftArm = servo(leftArm, hardwareMap, leftArmS, Servo.Direction.FORWARD, 0, 1, leftArmP);
-                //RELIC SETUP
-                relicArm = motor(relicArm, hardwareMap, relicArmS, DcMotorSimple.Direction.FORWARD);
-                //relicClaw = servo(relicClaw, hardwareMap, relicClawS, Servo.Direction.FORWARD, 0, 1, 0.5);
-                //relicWrist = servo(relicWrist, hardwareMap, relicWristS, Servo.Direction.FORWARD, 0, 1, 0.5);
-
-                //pivot = motor(pivot, hardwareMap, "pivot_0", DcMotorSimple.Direction.FORWARD);
-
-                //JEWEL SETUP
-                jewelDown = servo(jewelDown, hardwareMap, jewelDownS, Servo.Direction.FORWARD, startingPositionDown, endPositionDown, jewelDownP);
-                jewelFlick = servo(jewelFlick, hardwareMap, jewelFlickS, Servo.Direction.FORWARD, startingPositionFlick, endPositionFlick, jewelFlickP);
-
-                jewelSensor = colorSensor(jewelSensor, hardwareMap, jewelSensorS, true);
-
-                //BALANCE SETUP
-
-                balanceR = servo(balanceR, hardwareMap, balanceRS, Servo.Direction.FORWARD, 0, 1, balanceRP);
-                balanceL = servo(balanceL, hardwareMap, balanceLS, Servo.Direction.FORWARD, 0, 1, balanceLP);
-
-                //ENCODER-BASED MOTORS
-                motorEncoderMode(motorFR, motorFL, motorBR, motorBL/*, pivot*/, relicArm, lift);
-
-                telemetry.addLine("SETUP COMPLETE");
-                telemetry.addLine("READY!");
-                telemetry.update();
-                break;
-            case pivot:
-                pivot = motor(pivot, hardwareMap, pivotS, DcMotorSimple.Direction.FORWARD);
-                rightTread = motor(rightTread, hardwareMap, rightTreadS, DcMotorSimple.Direction.FORWARD);
-                leftTread = motor(leftTread, hardwareMap, leftTreadS, DcMotorSimple.Direction.FORWARD);
-
-        }
-
-
-    }
-
+    //HARDWARE SETUP FUNCTIONS
     public void motorEncoderMode(DcMotor... motor){
         for (DcMotor i: motor){
             i.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -1276,6 +1023,133 @@ public class Functions extends LinearOpMode{
 
         return sensor;
     }
+
+    public void driveTrainMovement(double speed, movements movement){
+        int[] signs = movement.getSigns();
+        for (DcMotor motor: drivetrain){
+            int x = Arrays.asList(drivetrain).indexOf(motor);
+            motor.setPower(signs[x]* speed);
+        }
+    }
+
+    //TO BE TESTED: REVOLUTIONARY FUNCTIONS
+    public void driveTrainEncoderMovement(double speed, double distance, double timeoutS, long waitAfter, movements movement) throws  InterruptedException{
+
+        int[] targets = new int[drivetrain.length];
+        int[] signs = movement.getSigns();
+
+        // Ensure that the opmode is still active
+        if (opModeIsActive()) {
+            // Determine new target position, and pass to motor controller
+
+
+            for (DcMotor motor : drivetrain){
+                int x = Arrays.asList(drivetrain).indexOf(motor);
+                targets[x] = motor.getCurrentPosition() + (int) (signs[x] * distance * COUNTS_PER_INCH);
+            }
+            for (DcMotor motor: drivetrain){
+                int x = Arrays.asList(drivetrain).indexOf(motor);
+                motor.setTargetPosition(targets[x]);
+            }
+            for (DcMotor motor: drivetrain){
+                motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            }
+            runtime.reset();
+
+            for (DcMotor motor:drivetrain){
+                motor.setPower(Math.abs(speed));
+            }
+
+            // keep looping while we are still active, and there is time left, and both motors are running.
+            boolean x = true;
+            while (opModeIsActive() &&
+                    (runtime.seconds() < timeoutS) &&
+                    (x)) {
+
+                // Display it for the driver.
+                // Allow time for other processes to run.
+                idle();
+                for (DcMotor motor: drivetrain){
+                    if (!motor.isBusy()){
+                        x =false;
+                    }
+                }
+            }
+
+            waitOneFullHardwareCycle();
+            // Stop all motion;
+            for (DcMotor motor: drivetrain){
+                motor.setPower(0);
+            }
+
+            // Turn off RUN_TO_POSITION
+            for (DcMotor motor: drivetrain){
+                motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            }
+            sleep(waitAfter);
+
+
+        }
+    }
+    public void encoderMovement(double speed, double distance, double timeoutS, long waitAfter, movements movement, DcMotor... motors) throws  InterruptedException{
+
+        int[] targets = new int[motors.length];
+        int[] signs = movement.getSigns();
+
+        // Ensure that the opmode is still active
+        if (opModeIsActive()) {
+            // Determine new target position, and pass to motor controller
+
+
+            for (DcMotor motor : motors){
+                int x = Arrays.asList(motors).indexOf(motor);
+                targets[x] = motor.getCurrentPosition() + (int) (signs[x] * distance * COUNTS_PER_INCH);
+            }
+            for (DcMotor motor: motors){
+                int x = Arrays.asList(motors).indexOf(motor);
+                motor.setTargetPosition(targets[x]);
+            }
+            for (DcMotor motor: motors){
+                motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            }
+            runtime.reset();
+
+            for (DcMotor motor:motors){
+                motor.setPower(Math.abs(speed));
+            }
+
+            // keep looping while we are still active, and there is time left, and both motors are running.
+            boolean x = true;
+            while (opModeIsActive() &&
+                    (runtime.seconds() < timeoutS) &&
+                    (x)) {
+
+                // Display it for the driver.
+                // Allow time for other processes to run.
+                idle();
+                for (DcMotor motor: motors){
+                    if (!motor.isBusy()){
+                        x =false;
+                    }
+                }
+            }
+
+            waitOneFullHardwareCycle();
+            // Stop all motion;
+            for (DcMotor motor: motors){
+                motor.setPower(0);
+            }
+
+            // Turn off RUN_TO_POSITION
+            for (DcMotor motor: motors){
+                motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            }
+            sleep(waitAfter);
+
+
+        }
+    }
+
 
 }
 

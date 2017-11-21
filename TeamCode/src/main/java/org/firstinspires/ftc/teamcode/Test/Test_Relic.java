@@ -22,10 +22,7 @@ public class Test_Relic extends Functions {
         runtime.reset();
         while (opModeIsActive()) {
 
-            relicArm.setPower(0.5);
-            sleep(500);
-            setServoPosition(90, relicClaw, 180);
-            setServoPosition(90, relicWrist, 180);
+
 
             break;
         }
