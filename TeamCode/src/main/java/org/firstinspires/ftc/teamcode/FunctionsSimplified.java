@@ -23,7 +23,7 @@ import java.util.StringTokenizer;
  */
 @Autonomous(name="Functions", group="Main Blue")
 
-public class Functions extends LinearOpMode{
+public class FunctionsSimplified extends LinearOpMode{
 
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -41,7 +41,6 @@ public class Functions extends LinearOpMode{
 
     //                      SENSOR CALIBRATIONS
     public static final int blueValue = 1;
-    movements[] allMovements = {movements.forward, movements.backward, movements.right, movements.left, movements.tr, movements.tl, movements.br, movements.bl, movements.ccw, movements.cw};
 
     //                             MOTOR/SERVO DECLARATIONS
 
@@ -67,7 +66,7 @@ public class Functions extends LinearOpMode{
     public String jewelSensorS = "colorSensor_red1";
     //Relic Systems:
 
-        // Empty rn
+    // Empty rn
 
     //Glyph System:
 
@@ -87,41 +86,8 @@ public class Functions extends LinearOpMode{
 
 
 
-    DcMotor[] drivetrain = {motorFR, motorFL, motorBR, motorBL};
 
-    public enum movements{
 
-        forward(1, 1, 1, 1),
-        backward(-1, -1, -1, -1),
-        right(-1, -1, 1, 1),
-        left(1, 1, -1, -1),
-        tr(0.3, 1, 1, 0.3),
-        tl(1, 0.3, 0.3, 1),
-        br(-1, -0.3, -0.3, -1),
-        bl(-0.3, -1, -1 -0.3),
-        cw(-1, 1, -1, 1),
-        ccw(1, -1, 1, -1),
-        glyphUp(),
-        glyphDown(),
-        treadUp(),
-        treadDown();
-
-        private final double[] directions;
-
-        movements(double... signs){
-            this.directions = signs;
-        }
-
-        private double[] getSigns(){
-            return directions;
-        }
-    }
-    public enum treadPivotSettings{
-        lift, drop, center;
-    }
-    public enum setupType{
-        all, glyph, jewel, relic, drive, teleop, pivot;
-    }
     public enum team{
         red1, red2, blue1, blue2;
     }
@@ -142,94 +108,42 @@ public class Functions extends LinearOpMode{
 
     //------------------------------------------------------------------------------------------------------------------------
 
-    public Functions(){
+    public FunctionsSimplified(){
 
     }
     public void runOpMode() throws InterruptedException{
-        Setup(setupType.all);
+        Setup();
 
     }
 
-    public void Setup(setupType setup) throws InterruptedException{
-        switch (setup){
-            case all:
+    public void Setup() throws InterruptedException{
 
-                //DRIVETRAIN SETUP
-                motorFR = motor(motorFR, hardwareMap, motorFRS, DcMotor.Direction.FORWARD);
-                motorFL = motor(motorFL, hardwareMap, motorFLS, DcMotor.Direction.REVERSE);
-                motorBR = motor(motorBR, hardwareMap, motorBRS, DcMotor.Direction.FORWARD);
-                motorBL = motor(motorBL, hardwareMap, motorBLS, DcMotor.Direction.REVERSE);
+            //DRIVETRAIN SETUP
+            motorFR = motor(motorFR, hardwareMap, motorFRS, DcMotor.Direction.FORWARD);
+            motorFL = motor(motorFL, hardwareMap, motorFLS, DcMotor.Direction.REVERSE);
+            motorBR = motor(motorBR, hardwareMap, motorBRS, DcMotor.Direction.FORWARD);
+            motorBL = motor(motorBL, hardwareMap, motorBLS, DcMotor.Direction.REVERSE);
 
-                //GLYPH SETUP
+            //GLYPH SETUP
 
-                pivot = motor(pivot, hardwareMap, pivotS, DcMotorSimple.Direction.FORWARD);
-
-                //JEWEL SETUP
-                jewelDown = servo(jewelDown, hardwareMap, jewelDownS, Servo.Direction.FORWARD, startingPositionDown, endPositionDown, jewelDownPosition);
-                jewelFlick = servo(jewelFlick, hardwareMap, jewelFlickS, Servo.Direction.FORWARD, startingPositionFlick, endPositionFlick, jewelFlickPosition);
-
-                jewelSensor = colorSensor(jewelSensor, hardwareMap, jewelSensorS, true);
+            pivot = motor(pivot, hardwareMap, pivotS, DcMotorSimple.Direction.FORWARD);
+            leftTread = motor(leftTread, hardwareMap, leftTreadS, DcMotorSimple.Direction.FORWARD);
+            rightTread = motor(rightTread, hardwareMap, rightTreadS, DcMotorSimple.Direction.FORWARD);
 
 
-                //ENCODER-BASED MOTORS
-                motorEncoderMode(motorFR, motorFL, motorBR, motorBL, pivot);
+            //JEWEL SETUP
+            jewelDown = servo(jewelDown, hardwareMap, jewelDownS, Servo.Direction.FORWARD, startingPositionDown, endPositionDown, jewelDownPosition);
+            jewelFlick = servo(jewelFlick, hardwareMap, jewelFlickS, Servo.Direction.FORWARD, startingPositionFlick, endPositionFlick, jewelFlickPosition);
 
-                telemetry.addLine("SETUP COMPLETE");
-                telemetry.addLine("READY!");
-                telemetry.update();
-                break;
-            case relic:
+            jewelSensor = colorSensor(jewelSensor, hardwareMap, jewelSensorS, true);
 
 
+            //ENCODER-BASED MOTORS
+            motorEncoderMode(motorFR, motorFL, motorBR, motorBL, pivot);
 
-            case jewel:
-                jewelDown = servo(jewelDown, hardwareMap, jewelDownS, Servo.Direction.FORWARD, startingPositionDown, endPositionDown, jewelDownPosition);
-                jewelFlick = servo(jewelFlick, hardwareMap, jewelFlickS, Servo.Direction.FORWARD, startingPositionDown, endPositionDown, jewelFlickPosition);
-
-                jewelSensor = colorSensor(jewelSensor, hardwareMap, jewelSensorS, true);
-                sleep(2000);
-            case drive:
-                motorFR = motor(motorFR, hardwareMap, motorFRS, DcMotor.Direction.REVERSE);
-                motorFL = motor(motorFL, hardwareMap, motorFLS, DcMotor.Direction.FORWARD);
-                motorBR = motor(motorBR, hardwareMap, motorBRS, DcMotor.Direction.REVERSE);
-                motorBL = motor(motorBL, hardwareMap, motorBLS, DcMotor.Direction.FORWARD);
-
-                motorEncoderMode(motorFR, motorFL, motorBR, motorBL);
-            case teleop:
-                //DRIVETRAIN SETUP
-                motorFR = motor(motorFR, hardwareMap, motorFRS, DcMotor.Direction.FORWARD);
-                motorFL = motor(motorFL, hardwareMap, motorFLS, DcMotor.Direction.REVERSE);
-                motorBR = motor(motorBR, hardwareMap, motorBRS, DcMotor.Direction.FORWARD);
-                motorBL = motor(motorBL, hardwareMap, motorBLS, DcMotor.Direction.REVERSE);
-
-                //GLYPH SETUP
-
-                //RELIC SETUP
-
-                pivot = motor(pivot, hardwareMap, pivotS, DcMotorSimple.Direction.FORWARD);
-                //JEWEL SETUP
-                jewelDown = servo(jewelDown, hardwareMap, jewelDownS, Servo.Direction.FORWARD, startingPositionDown, endPositionDown, jewelDownPosition);
-                jewelFlick = servo(jewelFlick, hardwareMap, jewelFlickS, Servo.Direction.FORWARD, startingPositionFlick, endPositionFlick, jewelFlickPosition);
-
-                jewelSensor = colorSensor(jewelSensor, hardwareMap, jewelSensorS, true);
-
-                //ENCODER-BASED MOTORS
-                motorEncoderMode(motorFR, motorFL, motorBR, motorBL, pivot);
-
-                telemetry.addLine("SETUP COMPLETE");
-                telemetry.addLine("READY!");
-                telemetry.update();
-                break;
-            case glyph:
-                pivot = motor(pivot, hardwareMap, pivotS, DcMotorSimple.Direction.FORWARD);
-
-                rightTread = motor(rightTread, hardwareMap, rightTreadS, DcMotorSimple.Direction.FORWARD);
-                leftTread = motor(leftTread, hardwareMap, leftTreadS, DcMotorSimple.Direction.FORWARD);
-
-                motorEncoderMode(pivot, rightTread, leftTread);
-
-        }
-
+            telemetry.addLine("SETUP COMPLETE");
+            telemetry.addLine("READY!");
+            telemetry.update();
 
     }
 
@@ -892,6 +806,8 @@ public class Functions extends LinearOpMode{
 
     }
 
+
+
     //GLYPH FUNCTIONS
 
 
@@ -953,21 +869,37 @@ public class Functions extends LinearOpMode{
 
     //TEST FUNCTIONS
     public void MecanumTest()throws InterruptedException {
+
+        telemetry.addLine("FORWARD");
+        telemetry.update();
         Forward(0.2, 5, 8, 2000);
+        telemetry.addLine("Backward");
+        telemetry.update();
         Backward(0.2, 5, 8, 2000);
+        telemetry.addLine("right");
+        telemetry.update();
         Right(0.2, 5, 8, 2000);
+        telemetry.addLine("left");
+        telemetry.update();
         Left(0.2, 5, 8, 2000);
+        telemetry.addLine("top right");
+        telemetry.update();
         TR(0.2, 5, 8, 2000);
+        telemetry.addLine("top left");
+        telemetry.update();
         TL(0.2, 5, 8, 2000);
+        telemetry.addLine("back right");
+        telemetry.update();
         BR(0.2, 5, 8, 2000);
+        telemetry.addLine("back left");
+        telemetry.update();
         BL(0.2, 5, 8, 2000);
+        telemetry.addLine("cw");
+        telemetry.update();
         CW(0.2, 5, 7, 2000);
+        telemetry.addLine("ccw");
+        telemetry.update();
         CCW(0.2, 5, 7, 2000);
-    }
-    public void newEncodersStyleTest(double speed, double distance, double timeOutS, long waitAfter) throws InterruptedException{
-        for (movements movement: allMovements){
-            driveTrainEncoderMovement(speed, distance, timeOutS, waitAfter, movement);
-        }
     }
     public void JewelTest() throws InterruptedException{
         flick(team.blue1);
@@ -978,23 +910,6 @@ public class Functions extends LinearOpMode{
 
     }
 
-    //POSTIONING
-    public void setServoPosition(double degrees, Servo servo, double maxDegrees) throws InterruptedException{
-        servo.setPosition(degrees/maxDegrees);
-    }
-    /*public void setPivot(treadPivotSettings position) throws InterruptedException{
-        switch (position){
-            case lift:
-                pivot.setPosition(0);
-                break;
-            case center:
-                pivot.setPosition(0.5);
-                break;
-            case drop:
-                pivot.setPosition(1);
-                break;
-        }
-    }*/
 
     //HARDWARE SETUP FUNCTIONS
     public void motorEncoderMode(DcMotor... motor) throws InterruptedException{
@@ -1027,137 +942,6 @@ public class Functions extends LinearOpMode{
         telemetry.update();
 
         return sensor;
-    }
-
-    public void driveTrainMovement(double speed, movements movement) throws InterruptedException{
-        double[] signs = movement.getSigns();
-        for (DcMotor motor: drivetrain){
-            int x = Arrays.asList(drivetrain).indexOf(motor);
-            motor.setPower(signs[x]* speed);
-
-        }
-    }
-    public void stopDrivetrain() throws InterruptedException{
-        for (DcMotor motor: drivetrain){
-            motor.setPower(0);
-        }
-    }
-    //TO BE TESTED: REVOLUTIONARY FUNCTIONS
-    public void driveTrainEncoderMovement(double speed, double distance, double timeoutS, long waitAfter, movements movement) throws  InterruptedException{
-
-        int[] targets = new int[drivetrain.length];
-        double[] signs = movement.getSigns();
-
-        // Ensure that the opmode is still active
-        if (opModeIsActive()) {
-            // Determine new target position, and pass to motor controller
-
-
-            for (DcMotor motor : drivetrain){
-                int x = Arrays.asList(drivetrain).indexOf(motor);
-                targets[x] = motor.getCurrentPosition() + (int) (signs[x] * distance * COUNTS_PER_INCH);
-            }
-            for (DcMotor motor: drivetrain){
-                int x = Arrays.asList(drivetrain).indexOf(motor);
-                motor.setTargetPosition(targets[x]);
-            }
-            for (DcMotor motor: drivetrain){
-                motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            }
-            runtime.reset();
-
-            for (DcMotor motor:drivetrain){
-                motor.setPower(Math.abs(speed));
-            }
-
-            // keep looping while we are still active, and there is time left, and both motors are running.
-            boolean x = true;
-            while (opModeIsActive() &&
-                    (runtime.seconds() < timeoutS) &&
-                    (x)) {
-
-                // Display it for the driver.
-                // Allow time for other processes to run.
-                idle();
-                for (DcMotor motor: drivetrain){
-                    if (!motor.isBusy()){
-                        x =false;
-                    }
-                }
-            }
-
-            waitOneFullHardwareCycle();
-            // Stop all motion;
-            for (DcMotor motor: drivetrain){
-                motor.setPower(0);
-            }
-
-            // Turn off RUN_TO_POSITION
-            for (DcMotor motor: drivetrain){
-                motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            }
-            sleep(waitAfter);
-
-
-        }
-    }
-    public void encoderMovement(double speed, double distance, double timeoutS, long waitAfter, movements movement, DcMotor... motors) throws  InterruptedException{
-
-        int[] targets = new int[motors.length];
-        double[] signs = movement.getSigns();
-
-        // Ensure that the opmode is still active
-        if (opModeIsActive()) {
-            // Determine new target position, and pass to motor controller
-
-
-            for (DcMotor motor : motors){
-                int x = Arrays.asList(motors).indexOf(motor);
-                targets[x] = motor.getCurrentPosition() + (int) (signs[x] * distance * COUNTS_PER_INCH);
-            }
-            for (DcMotor motor: motors){
-                int x = Arrays.asList(motors).indexOf(motor);
-                motor.setTargetPosition(targets[x]);
-            }
-            for (DcMotor motor: motors){
-                motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            }
-            runtime.reset();
-
-            for (DcMotor motor:motors){
-                motor.setPower(Math.abs(speed));
-            }
-
-            // keep looping while we are still active, and there is time left, and both motors are running.
-            boolean x = true;
-            while (opModeIsActive() &&
-                    (runtime.seconds() < timeoutS) &&
-                    (x)) {
-
-                // Display it for the driver.
-                // Allow time for other processes to run.
-                idle();
-                for (DcMotor motor: motors){
-                    if (!motor.isBusy()){
-                        x =false;
-                    }
-                }
-            }
-
-            waitOneFullHardwareCycle();
-            // Stop all motion;
-            for (DcMotor motor: motors){
-                motor.setPower(0);
-            }
-
-            // Turn off RUN_TO_POSITION
-            for (DcMotor motor: motors){
-                motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            }
-            sleep(waitAfter);
-
-
-        }
     }
 
 

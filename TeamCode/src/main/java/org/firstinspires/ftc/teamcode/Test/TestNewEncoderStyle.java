@@ -8,9 +8,9 @@ import org.firstinspires.ftc.teamcode.Functions;
 /**
  * Created by arulgupta on 9/29/17.
  */
-@Autonomous(name="Mecanum Test", group="Test3")
+@Autonomous(name="New Encoders Test", group="Test3")
 
-public class Test_Mecanum extends Functions {
+public class TestNewEncoderStyle extends Functions {
 
     public ElapsedTime runtime = new ElapsedTime();
 
@@ -21,8 +21,7 @@ public class Test_Mecanum extends Functions {
         waitForStart();
         runtime.reset();
         while (opModeIsActive()) {
-
-            MecanumTest();
+            newEncodersStyleTest(0.2, 10, 10, 2000);
             break;
         }
     }
