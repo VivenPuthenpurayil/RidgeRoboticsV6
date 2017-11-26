@@ -21,9 +21,9 @@ import java.util.StringTokenizer;
 /**
  * Created by arulgupta on 9/26/17.
  */
-@Autonomous(name="Functions", group="Main Blue")
+@Autonomous(name="Functions test", group="Main Blue")
 
-public class Functions extends LinearOpMode{
+public class FunctionsTest extends LinearOpMode{
 
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -46,48 +46,74 @@ public class Functions extends LinearOpMode{
     //                             MOTOR/SERVO DECLARATIONS
 
     //Drivetrains:
-    public DcMotor motorFR;
-    public DcMotor motorFL;
-    public DcMotor motorBR;
-    public DcMotor motorBL;
+    public static DcMotor motorFR;
+    public static DcMotor motorFL;
+    public static DcMotor motorBR;
+    public static DcMotor motorBL;
 
-    public String motorFRS = "motorFR_green1";
-    public String motorFLS = "motorFL_red2";
-    public String motorBRS = "motorBR_green0";
-    public String motorBLS = "motorBL_red1";
+    public static String motorFRS = "motorFR_green1";
+    public static String motorFLS = "motorFL_red2";
+    public static String motorBRS = "motorBR_green0";
+    public static String motorBLS = "motorBL_red1";
 
 
     //Jewel Systems:
-    public Servo jewelDown;
-    public Servo jewelFlick;
-    public ColorSensor jewelSensor;
+    public static Servo jewelDown;
+    public static Servo jewelFlick;
+    public static ColorSensor jewelSensor;
 
-    public String jewelDownS = "jewelDown_green5";
-    public String jewelFlickS = "jewelFlick_red5";
-    public String jewelSensorS = "colorSensor_red1";
+    public static String jewelDownS = "jewelDown_green5";
+    public static String jewelFlickS = "jewelFlick_red5";
+    public static String jewelSensorS = "colorSensor_red1";
     //Relic Systems:
 
-        // Empty rn
+    // Empty rn
 
     //Glyph System:
 
-    public DcMotor pivot;
-    public DcMotor rightTread;
-    public DcMotor leftTread;
+    public static DcMotor pivot;
+    public static DcMotor rightTread;
+    public static DcMotor leftTread;
 
-    public String pivotS = "pivotMotor_green2";
-    public String rightTreadS = "rightTread_green3";
-    public String leftTreadS = "leftTread_red3";
+    public static String pivotS = "pivotMotor_green2";
+    public static String rightTreadS = "rightTread_green3";
+    public static String leftTreadS = "leftTread_red3";
 
     public double rightArmPosition = 0.4;
     public double leftArmPosition = 0.4;
+
+//---------------SERVO SETUP--------------------------------
+
+    //starting positions
+    private double minPositionDown = 0; //CHECK AND CHOOSE POSITION
+    private double minPositionFlick = 0; //CHECK AND CHOOSE POSITION
+
+    //end positions
+    private double maxPositionDown = 1; //CHECK AND CHOOSE POSITION
+    private double maxPositionFlick = 1; //CHECK AND CHOOSE POSITION
+
+    private double jewelDownPosition = 0.75;
+    private double jewelFlickPosition = 0.5;
 
 
     //BALANCE BOARD SYSTEMS:
 
 
-
     DcMotor[] drivetrain = {motorFR, motorFL, motorBR, motorBL};
+    DcMotorSimple.Direction[] driveDirections = {DcMotorSimple.Direction.REVERSE, DcMotorSimple.Direction.FORWARD, DcMotorSimple.Direction.REVERSE, DcMotorSimple.Direction.FORWARD};
+    String[] driveConfigStrings = {motorFRS, motorFLS, motorBRS, motorBLS};
+
+    Servo[] jewelServos = {jewelDown, jewelFlick};
+    Servo.Direction[] jewelDirections = {Servo.Direction.FORWARD, Servo.Direction.FORWARD};
+    String[] jewelConfigStrings = {jewelDownS, jewelFlickS};
+    double[] jewelMinPositions = {minPositionDown, minPositionFlick};
+    double [] jewelMaxPositions = {maxPositionDown, maxPositionFlick};
+    double[] jewelStartPositions = {jewelDownPosition, jewelFlickPosition};
+
+    DcMotor[] glyphMotors = {pivot, leftTread, rightTread};
+    String[] glyphConfigStrings = {pivotS, leftTreadS, rightTreadS};
+    DcMotorSimple.Direction[] glyphDirections = {DcMotorSimple.Direction.FORWARD, DcMotorSimple.Direction.FORWARD, DcMotorSimple.Direction.FORWARD};
+
 
     public enum movements{
 
@@ -125,24 +151,11 @@ public class Functions extends LinearOpMode{
     public enum team{
         red1, red2, blue1, blue2;
     }
-    //---------------SERVO SETUP--------------------------------
-
-    //starting positions
-    private double startingPositionDown = 0; //CHECK AND CHOOSE POSITION
-    private double startingPositionFlick = 0; //CHECK AND CHOOSE POSITION
-
-    //end positions
-    private double endPositionDown = 1; //CHECK AND CHOOSE POSITION
-    private double endPositionFlick = 1; //CHECK AND CHOOSE POSITION
-
-    private double jewelDownPosition = 0.75;
-    private double jewelFlickPosition = 0.5;
-
 
 
     //------------------------------------------------------------------------------------------------------------------------
 
-    public Functions(){
+    public FunctionsTest(){
 
     }
     public void runOpMode() throws InterruptedException{
@@ -153,82 +166,58 @@ public class Functions extends LinearOpMode{
     public void Setup(setupType setup) throws InterruptedException{
         switch (setup){
             case all:
-
                 //DRIVETRAIN SETUP
-                motorFR = motor(motorFR, hardwareMap, motorFRS, DcMotor.Direction.FORWARD);
-                motorFL = motor(motorFL, hardwareMap, motorFLS, DcMotor.Direction.REVERSE);
-                motorBR = motor(motorBR, hardwareMap, motorBRS, DcMotor.Direction.FORWARD);
-                motorBL = motor(motorBL, hardwareMap, motorBLS, DcMotor.Direction.REVERSE);
+                driveTrainSetup();
 
                 //GLYPH SETUP
-
-                pivot = motor(pivot, hardwareMap, pivotS, DcMotorSimple.Direction.FORWARD);
+                glyphMotorSetup();
 
                 //JEWEL SETUP
-                jewelDown = servo(jewelDown, hardwareMap, jewelDownS, Servo.Direction.FORWARD, startingPositionDown, endPositionDown, jewelDownPosition);
-                jewelFlick = servo(jewelFlick, hardwareMap, jewelFlickS, Servo.Direction.FORWARD, startingPositionFlick, endPositionFlick, jewelFlickPosition);
-
+                jewelServoSetup();
                 jewelSensor = colorSensor(jewelSensor, hardwareMap, jewelSensorS, true);
-
 
                 //ENCODER-BASED MOTORS
                 motorEncoderMode(motorFR, motorFL, motorBR, motorBL, pivot);
-
-                telemetry.addLine("SETUP COMPLETE");
-                telemetry.addLine("READY!");
-                telemetry.update();
                 break;
             case relic:
 
 
 
             case jewel:
-                jewelDown = servo(jewelDown, hardwareMap, jewelDownS, Servo.Direction.FORWARD, startingPositionDown, endPositionDown, jewelDownPosition);
-                jewelFlick = servo(jewelFlick, hardwareMap, jewelFlickS, Servo.Direction.FORWARD, startingPositionDown, endPositionDown, jewelFlickPosition);
+                jewelServoSetup();
 
                 jewelSensor = colorSensor(jewelSensor, hardwareMap, jewelSensorS, true);
-                sleep(2000);
+                sleep(500);
             case drive:
-                motorFR = motor(motorFR, hardwareMap, motorFRS, DcMotor.Direction.REVERSE);
-                motorFL = motor(motorFL, hardwareMap, motorFLS, DcMotor.Direction.FORWARD);
-                motorBR = motor(motorBR, hardwareMap, motorBRS, DcMotor.Direction.REVERSE);
-                motorBL = motor(motorBL, hardwareMap, motorBLS, DcMotor.Direction.FORWARD);
+                driveTrainSetup();
 
                 motorEncoderMode(motorFR, motorFL, motorBR, motorBL);
             case teleop:
                 //DRIVETRAIN SETUP
-                motorFR = motor(motorFR, hardwareMap, motorFRS, DcMotor.Direction.FORWARD);
-                motorFL = motor(motorFL, hardwareMap, motorFLS, DcMotor.Direction.REVERSE);
-                motorBR = motor(motorBR, hardwareMap, motorBRS, DcMotor.Direction.FORWARD);
-                motorBL = motor(motorBL, hardwareMap, motorBLS, DcMotor.Direction.REVERSE);
+                driveTrainSetup();
 
                 //GLYPH SETUP
+                glyphMotorSetup();
 
                 //RELIC SETUP
 
-                pivot = motor(pivot, hardwareMap, pivotS, DcMotorSimple.Direction.FORWARD);
                 //JEWEL SETUP
-                jewelDown = servo(jewelDown, hardwareMap, jewelDownS, Servo.Direction.FORWARD, startingPositionDown, endPositionDown, jewelDownPosition);
-                jewelFlick = servo(jewelFlick, hardwareMap, jewelFlickS, Servo.Direction.FORWARD, startingPositionFlick, endPositionFlick, jewelFlickPosition);
+                jewelServoSetup();
 
                 jewelSensor = colorSensor(jewelSensor, hardwareMap, jewelSensorS, true);
 
                 //ENCODER-BASED MOTORS
                 motorEncoderMode(motorFR, motorFL, motorBR, motorBL, pivot);
-
-                telemetry.addLine("SETUP COMPLETE");
-                telemetry.addLine("READY!");
-                telemetry.update();
                 break;
             case glyph:
-                pivot = motor(pivot, hardwareMap, pivotS, DcMotorSimple.Direction.FORWARD);
-
-                rightTread = motor(rightTread, hardwareMap, rightTreadS, DcMotorSimple.Direction.FORWARD);
-                leftTread = motor(leftTread, hardwareMap, leftTreadS, DcMotorSimple.Direction.FORWARD);
+                glyphMotorSetup();
 
                 motorEncoderMode(pivot, rightTread, leftTread);
 
         }
+        telemetry.addLine("SETUP COMPLETE");
+        telemetry.addLine("READY!");
+        telemetry.update();
 
 
     }
@@ -953,16 +942,16 @@ public class Functions extends LinearOpMode{
 
     //TEST FUNCTIONS
     public void MecanumTest()throws InterruptedException {
-        Forward(0.2, 5, 8, 2000);
-        Backward(0.2, 5, 8, 2000);
-        Right(0.2, 5, 8, 2000);
-        Left(0.2, 5, 8, 2000);
-        TR(0.2, 5, 8, 2000);
-        TL(0.2, 5, 8, 2000);
-        BR(0.2, 5, 8, 2000);
-        BL(0.2, 5, 8, 2000);
-        CW(0.2, 5, 7, 2000);
-        CCW(0.2, 5, 7, 2000);
+        Forward(0.2, 10, 8, 2000);
+        Backward(0.2, 10, 8, 2000);
+        Right(0.2, 10, 8, 2000);
+        Left(0.2, 10, 8, 2000);
+        TR(0.2, 10, 8, 2000);
+        TL(0.2, 10, 8, 2000);
+        BR(0.2, 10, 8, 2000);
+        BL(0.2, 10, 8, 2000);
+        CW(0.2, 10, 7, 2000);
+        CCW(0.2, 10, 7, 2000);
     }
     public void newEncodersStyleTest(double speed, double distance, double timeOutS, long waitAfter) throws InterruptedException{
         for (movements movement: allMovements){
@@ -997,6 +986,24 @@ public class Functions extends LinearOpMode{
     }*/
 
     //HARDWARE SETUP FUNCTIONS
+    public void driveTrainSetup() throws InterruptedException{
+        for (DcMotor motor: drivetrain){
+            int x = Arrays.asList(drivetrain).indexOf(motor);
+            motor = motor(motor, hardwareMap, driveConfigStrings[x], driveDirections[x]);
+        }
+    }
+    public void jewelServoSetup() throws InterruptedException{
+        for (Servo servo: jewelServos){
+            int x = Arrays.asList(jewelServos).indexOf(servo);
+            servo = servo(servo, hardwareMap, jewelConfigStrings[x], jewelDirections[x], jewelMinPositions[x], jewelMaxPositions[x], jewelStartPositions[x]);
+        }
+    }
+    public void glyphMotorSetup() throws InterruptedException{
+        for (DcMotor motor: glyphMotors) {
+            int x = Arrays.asList(glyphMotors).indexOf(motor);
+            motor = motor(motor, hardwareMap, glyphConfigStrings[x], glyphDirections[x]);
+        }
+    }
     public void motorEncoderMode(DcMotor... motor) throws InterruptedException{
         for (DcMotor i: motor){
             i.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

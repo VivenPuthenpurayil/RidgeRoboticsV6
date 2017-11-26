@@ -41,6 +41,7 @@ public class DriveModeMecanum extends Functions{
             rl  = Range.clip(rl, -1, 1);
             y2 = Range.clip(y2, -1, 1);
             x2 = Range.clip(x2, -1, 1);
+            double rotationSpeed = 0.4;
             // write the values to the motors
 
             bCurrState = gamepad1.right_bumper;
@@ -60,220 +61,114 @@ public class DriveModeMecanum extends Functions{
             if(x) {
                 if (fb > rl && fb > -rl && fb > 0.1 & !ls) {
                     //Forward
-
-                    motorFR.setPower(-fb);
-                    motorBR.setPower(-fb);
-                    motorFL.setPower(fb);
-                    motorBL.setPower(fb);
+                    driveTrainMovement(fb, movements.forward);
                 } else if (fb < rl && fb < -rl && fb < -0.1 & !ls) {
                     //Backward
-                    motorFR.setPower(fb);
-                    motorBR.setPower(fb);
-                    motorFL.setPower(-fb);
-                    motorBL.setPower(-fb);
+                    driveTrainMovement(fb, movements.backward);
                 } else if (fb > rl && fb < -rl && rl < -0.1 & !ls) {
                     //Left
-                    motorFR.setPower(-rl);
-                    motorBR.setPower(rl);
-                    motorFL.setPower(-rl);
-                    motorBL.setPower(rl);
+                    driveTrainMovement(rl, movements.left);
                 } else if (fb < rl && fb > -rl && rl > 0.1 & !ls) {
                     //Right
-                    motorFR.setPower(rl);
-                    motorBR.setPower(-rl);
-                    motorFL.setPower(rl);
-                    motorBL.setPower(-rl);
+                    driveTrainMovement(rl, movements.right);
                 } else if (gamepad1.left_stick_button) {
                     //Spin CCW
-                    motorFR.setPower(0.4);
-                    motorBR.setPower(0.4);
-                    motorFL.setPower(0.4);
-                    motorBL.setPower(0.4);
+                    driveTrainMovement(rotationSpeed, movements.ccw);
 
                 } else if (gamepad1.right_stick_button) {
                     //Spin CW
-                    motorFR.setPower(-0.4);
-                    motorBR.setPower(-0.4);
-                    motorFL.setPower(-0.4);
-                    motorBL.setPower(-0.4);
+                    driveTrainMovement(rotationSpeed, movements.cw);
 
                 } else if (y2 > 0.1 && x2 > 0.1 & !rs) {
                     //DIAGONAL TR
-                    motorFR.setPower(0);
-                    motorBR.setPower(-p);
-                    motorFL.setPower(p);
-                    motorBL.setPower(0);
+                    driveTrainMovement(rotationSpeed, movements.tr);
 
                 } else if (y2 > 0.1 && x2 < -0.1 & !rs) {
                     //DIAGONAL TL
-                    motorFR.setPower(-p);
-                    motorBR.setPower(0);
-                    motorFL.setPower(0);
-                    motorBL.setPower(p);
+                    driveTrainMovement(rotationSpeed, movements.tl);
 
                 } else if (y2 < -0.1 && x2 > 0.1 & !rs) {
                     //DIAGONAL BR
-                    motorFR.setPower(p);
-                    motorBR.setPower(0);
-                    motorFL.setPower(0);
-                    motorBL.setPower(-p);
+                    driveTrainMovement(rotationSpeed, movements.br);
+
 
                 } else if (y2 < -0.1 && x2 < -0.1 & !rs) {
                     //DIAGONAL BL
-                    motorFR.setPower(0);
-                    motorBR.setPower(p);
-                    motorFL.setPower(-p);
-                    motorBL.setPower(0);
+                    driveTrainMovement(rotationSpeed, movements.bl);
+
 
                 }else if(gamepad1.dpad_up){
-                    motorFR.setPower(-0.5);
-                    motorBR.setPower(-0.5);
-                    motorFL.setPower(0.5);
-                    motorBL.setPower(0.5);
+                    driveTrainMovement(0.5, movements.backward);
+
 
                 }else if(gamepad1.dpad_down){
-                    motorFR.setPower(0.5);
-                    motorBR.setPower(0.5);
-                    motorFL.setPower(-0.5);
-                    motorBL.setPower(-0.5);
+                    driveTrainMovement(0.5, movements.forward);
+
 
                 }else if(gamepad1.dpad_left){
-                    motorFR.setPower(0.5);
-                    motorBR.setPower(-0.5);
-                    motorFL.setPower(-0.5);
-                    motorBL.setPower(0.5);
+                    driveTrainMovement(0.5, movements.right);
 
                 }else if(gamepad1.dpad_right){
-                    motorFR.setPower(-0.5);
-                    motorBR.setPower(0.5);
-                    motorFL.setPower(0.5);
-                    motorBL.setPower(-0.5);
+                    driveTrainMovement(0.5, movements.left);
+
 
                 }else {
-                    motorFR.setPower(0);
-                    motorBR.setPower(0);
-                    motorFL.setPower(0);
-                    motorBL.setPower(0);
+                    stopDrivetrain();
                 }
             }
             else {
                 if (fb > rl && fb > -rl && fb > 0.1 & !ls) {
                     //Forward
-                    motorFR.setPower(-0.2);
-                    motorBR.setPower(-0.2);
-                    motorFL.setPower(0.2);
-                    motorBL.setPower(0.2);
-                    telemetry.addLine("Should be working");
-                    telemetry.update();
+                    driveTrainMovement(0.2, movements.forward);
                 } else if (fb < rl && fb < -rl && fb < -0.1 & !ls) {
                     //Backward
-                    motorFR.setPower(0.2);
-                    motorBR.setPower(0.2);
-                    motorFL.setPower(-0.2);
-                    motorBL.setPower(-0.2);
-                    telemetry.addLine("Should be working");
-                    telemetry.update();
+                    driveTrainMovement(0.2, movements.backward);
                 } else if (fb > rl && fb < -rl && rl < -0.1 & !ls) {
                     //Left
-                    motorFR.setPower(-0.2);
-                    motorBR.setPower(0.2);
-                    motorFL.setPower(-0.2);
-                    motorBL.setPower(0.2);
-                    telemetry.addLine("Should be working");
-                    telemetry.update();
+                    driveTrainMovement(0.2, movements.left);
                 } else if (fb < rl && fb > -rl && rl > 0.1 & !ls) {
                     //Right
-                    motorFR.setPower(0.2);
-                    motorBR.setPower(-0.2);
-                    motorFL.setPower(0.2);
-                    motorBL.setPower(-0.2);
-                    telemetry.addLine("Should be working");
-                    telemetry.update();
+                    driveTrainMovement(0.2, movements.right);
                 }else if(gamepad1.dpad_up){
-                    motorFR.setPower(-0.2);
-                    motorBR.setPower(-0.2);
-                    motorFL.setPower(0.2);
-                    motorBL.setPower(0.2);
+                    driveTrainMovement(0.2, movements.backward);
 
                 }else if(gamepad1.dpad_down){
-                    motorFR.setPower(0.2);
-                    motorBR.setPower(0.2);
-                    motorFL.setPower(-0.2);
-                    motorBL.setPower(-0.2);
+                    driveTrainMovement(0.2, movements.forward);
 
                 }else if(gamepad1.dpad_left){
-                    motorFR.setPower(-0.2);
-                    motorBR.setPower(0.2);
-                    motorFL.setPower(-0.2);
-                    motorBL.setPower(0.2);
+                    driveTrainMovement(0.2, movements.right);
 
                 }else if(gamepad1.dpad_right){
-                    motorFR.setPower(0.2);
-                    motorBR.setPower(-0.2);
-                    motorFL.setPower(0.2);
-                    motorBL.setPower(-0.2);
+                    driveTrainMovement(0.2, movements.left);
 
                 }
                 else if (gamepad1.left_stick_button) {
                     //Spin CCW
-                    motorFR.setPower(0.2);
-                    motorBR.setPower(0.2);
-                    motorFL.setPower(0.2);
-                    motorBL.setPower(0.2);
-                    telemetry.addLine("Should be working");
-                    telemetry.update();
+                    driveTrainMovement(0.2, movements.ccw);
 
 
                 } else if (gamepad1.right_stick_button) {
                     //Spin CW
-                    motorFR.setPower(-0.2);
-                    motorBR.setPower(-0.2);
-                    motorFL.setPower(-0.2);
-                    motorBL.setPower(-0.2);
-                    telemetry.addLine("Should be working");
-                    telemetry.update();
+                    driveTrainMovement(0.2, movements.cw);
 
                 } else if (y2 > 0.1 && x2 > 0.1 & !rs) {
                     //DIAGONAL TR
-                    motorFR.setPower(0);
-                    motorBR.setPower(-0.2);
-                    motorFL.setPower(0.2);
-                    motorBL.setPower(0);
-                    telemetry.addLine("Should be working");
-                    telemetry.update();
+                    driveTrainMovement(0.2, movements.tr);
 
                 } else if (y2 > 0.1 && x2 < -0.1 & !rs) {
                     //DIAGONAL TL
-                    motorFR.setPower(-0.2);
-                    motorBR.setPower(0);
-                    motorFL.setPower(0);
-                    motorBL.setPower(0.2);
-                    telemetry.addLine("Should be working");
-                    telemetry.update();
+                    driveTrainMovement(0.2, movements.tl);
 
                 } else if (y2 < -0.1 && x2 > 0.1 & !rs) {
                     //DIAGONAL BR
-                    motorFR.setPower(0.2);
-                    motorBR.setPower(0);
-                    motorFL.setPower(0);
-                    motorBL.setPower(-0.2);
-                    telemetry.addLine("Should be working");
-                    telemetry.update();
+                    driveTrainMovement(0.2, movements.br);
 
                 } else if (y2 < -0.1 && x2 < -0.1 & !rs) {
                     //DIAGONAL BL
-                    motorFR.setPower(0);
-                    motorBR.setPower(0.2);
-                    motorFL.setPower(-0.2);
-                    motorBL.setPower(0);
-                    telemetry.addLine("Should be working");
-                    telemetry.update();
+                    driveTrainMovement(0.2, movements.bl);
 
                 } else {
-                    motorFR.setPower(0);
-                    motorBR.setPower(0);
-                    motorFL.setPower(0);
-                    motorBL.setPower(0);
+                    stopDrivetrain();
                 }
             }
             telemetry.addData("CRAWL MODE: ", gamepad1.right_bumper);
