@@ -233,28 +233,46 @@ public class DriveModeMecanum extends Functions{
             counts = 1;
 */
             //
+            if(gamepad2.y && count == 0){
+                rightTread.setPower(0.2);
+                leftTread.setPower(-0.2);
+                counts = 1;
 
-            /*
-            if(gamepad2.right_bumper && count == 0){
-                lift.setPower(0.2)    ;
+            }
+            else if(!gamepad2.y && gamepad2.a){
+                rightTread.setPower(-0.2);
+                leftTread.setPower(0.2);
+                counts = 0;
+            }
+            else if(!gamepad2.y & !gamepad2.a){
+                rightTread.setPower(0);
+                leftTread.setPower(0);
+                counts = 0;
+            }
+            else{
+                counts = 1;
+            }
+            counts = 1;
+
+            if(gamepad2.x && count == 0){
+                pivot.setPower(0.2)    ;
                 count = 1;
 
             }
-            else if(!gamepad2.right_bumper && gamepad2.left_bumper){
-                lift.setPower(-0.2);
+            else if(!gamepad2.x && gamepad2.b){
+                pivot.setPower(-0.2);
                 count = 0;
             }
-            else if(!gamepad2.right_bumper & !gamepad2.left_bumper){
-                lift.setPower(0);
+            else if(!gamepad2.x & !gamepad2.b){
+                pivot.setPower(0);
                 count = 0;
             }
             else{
                 count = 1;
             }
-            count = 1;*/
+            count = 1;
 ///
 
-            counts = 1;
 
 
 //-------------------------------------------------------------------

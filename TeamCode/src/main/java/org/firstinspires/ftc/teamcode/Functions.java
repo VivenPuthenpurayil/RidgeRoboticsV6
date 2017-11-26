@@ -68,6 +68,7 @@ public class Functions extends LinearOpMode{
     //Relic Systems:
 
         // Empty rn
+    DcMotor[] drivetrain = new DcMotor[4];
 
     //Glyph System:
 
@@ -87,7 +88,6 @@ public class Functions extends LinearOpMode{
 
 
 
-    DcMotor[] drivetrain = {motorFR, motorFL, motorBR, motorBL};
 
     public enum movements{
 
@@ -215,6 +215,10 @@ public class Functions extends LinearOpMode{
 
                 //ENCODER-BASED MOTORS
                 motorEncoderMode(motorFR, motorFL, motorBR, motorBL, pivot);
+                drivetrain[0] = motorFR;
+                drivetrain[1] = motorFL;
+                drivetrain[2] = motorBR;
+                drivetrain[3] = motorBL;
 
                 telemetry.addLine("SETUP COMPLETE");
                 telemetry.addLine("READY!");

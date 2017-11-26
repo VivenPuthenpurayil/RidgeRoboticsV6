@@ -21,7 +21,7 @@ import java.util.StringTokenizer;
 /**
  * Created by arulgupta on 9/26/17.
  */
-@Autonomous(name="Functions", group="Main Blue")
+@Autonomous(name="Functions Simplified", group="Main Blue")
 
 public class FunctionsSimplified extends LinearOpMode{
 
@@ -119,10 +119,10 @@ public class FunctionsSimplified extends LinearOpMode{
     public void Setup() throws InterruptedException{
 
             //DRIVETRAIN SETUP
-            motorFR = motor(motorFR, hardwareMap, motorFRS, DcMotor.Direction.FORWARD);
-            motorFL = motor(motorFL, hardwareMap, motorFLS, DcMotor.Direction.REVERSE);
-            motorBR = motor(motorBR, hardwareMap, motorBRS, DcMotor.Direction.FORWARD);
-            motorBL = motor(motorBL, hardwareMap, motorBLS, DcMotor.Direction.REVERSE);
+            motorFR = motor(motorFR, hardwareMap, motorFRS, DcMotor.Direction.REVERSE);
+            motorFL = motor(motorFL, hardwareMap, motorFLS, DcMotor.Direction.FORWARD);
+            motorBR = motor(motorBR, hardwareMap, motorBRS, DcMotor.Direction.REVERSE);
+            motorBL = motor(motorBL, hardwareMap, motorBLS, DcMotor.Direction.FORWARD);
 
             //GLYPH SETUP
 
@@ -226,9 +226,9 @@ public class FunctionsSimplified extends LinearOpMode{
             // Determine new target position, and pass to motor controller
 
 
-            newFRTarget = motorFR.getCurrentPosition() + (int) (-distance * COUNTS_PER_INCH);
+            newFRTarget = motorFR.getCurrentPosition() + (int) (distance * COUNTS_PER_INCH);
             newFLTarget = motorFL.getCurrentPosition() + (int) (-distance * COUNTS_PER_INCH);
-            newBRTarget = motorBR.getCurrentPosition() + (int) (-distance * COUNTS_PER_INCH);
+            newBRTarget = motorBR.getCurrentPosition() + (int) (distance * COUNTS_PER_INCH);
             newBLTarget = motorBL.getCurrentPosition() + (int) (-distance * COUNTS_PER_INCH);
 
             motorFR.setTargetPosition(newFRTarget);
@@ -802,9 +802,105 @@ public class FunctionsSimplified extends LinearOpMode{
 
     }
 
-    public void pivot(double speed, double distance, double timeoutS, long waitAfter){
+    public void PivotCW(double speed, double distance,  /*In Revolution*/ double timeoutS, long waitAfter) throws   InterruptedException {
+
+        int newPivotTarget;
+
+
+
+        // Ensure that the opmode is still active
+        if (opModeIsActive()) {
+            // Determine new target position, and pass to motor controller
+
+
+            newPivotTarget = pivot.getCurrentPosition() + (int) (-distance * COUNTS_PER_INCH);
+
+
+            pivot.setTargetPosition(newPivotTarget);
+
+
+            // Turn On RUN_TO_POSITION
+            pivot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+
+            // reset the timeout time and start motion.
+            runtime.reset();
+
+            pivot.setPower(Math.abs(speed));
+
+
+            // keep looping while we are still active, and there is time left, and both motors are running.
+            while (opModeIsActive() &&
+                    (runtime.seconds() < timeoutS) &&
+                    (pivot.isBusy())) {
+
+                // Display it for the driver.
+                // Allow time for other processes to run.
+                idle();
+            }
+
+            waitOneFullHardwareCycle();
+            // Stop all motion;
+            pivot.setPower(0);
+
+
+            // Turn off RUN_TO_POSITION
+            pivot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            sleep(waitAfter);   // optional pause after each move
+
+        }
 
     }
+    public void PivotCCW(double speed, double distance,  /*In Revolution*/ double timeoutS, long waitAfter) throws   InterruptedException {
+
+        int newPivotTarget;
+
+
+
+        // Ensure that the opmode is still active
+        if (opModeIsActive()) {
+            // Determine new target position, and pass to motor controller
+
+
+            newPivotTarget = pivot.getCurrentPosition() + (int) (distance * COUNTS_PER_INCH);
+
+
+            pivot.setTargetPosition(newPivotTarget);
+
+
+            // Turn On RUN_TO_POSITION
+            pivot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+
+            // reset the timeout time and start motion.
+            runtime.reset();
+
+            pivot.setPower(Math.abs(speed));
+
+
+            // keep looping while we are still active, and there is time left, and both motors are running.
+            while (opModeIsActive() &&
+                    (runtime.seconds() < timeoutS) &&
+                    (pivot.isBusy())) {
+
+                // Display it for the driver.
+                // Allow time for other processes to run.
+                idle();
+            }
+
+            waitOneFullHardwareCycle();
+            // Stop all motion;
+            pivot.setPower(0);
+
+
+            // Turn off RUN_TO_POSITION
+            pivot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            sleep(waitAfter);   // optional pause after each move
+
+        }
+
+    }
+
 
 
 
