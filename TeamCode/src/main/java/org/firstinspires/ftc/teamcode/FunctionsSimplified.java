@@ -1019,7 +1019,7 @@ public class FunctionsSimplified extends LinearOpMode{
     }
     public DcMotor motor(DcMotor motor, HardwareMap hardwareMap, String name, DcMotor.Direction direction) throws InterruptedException{
         motor = hardwareMap.dcMotor.get(name);
-        motor.setDirection(DcMotor.Direction.FORWARD);
+        motor.setDirection(direction);
         motor.setPower(0);
         return motor;
     }
