@@ -80,6 +80,12 @@ public class Functions extends LinearOpMode{
     public String rightTreadS = "rightTread_green3";
     public String leftTreadS = "leftTread_red3";
 
+    public Servo pullServo;
+
+    public String pullServoS = "pullServo";
+
+
+
     public double rightArmPosition = 0.4;
     public double leftArmPosition = 0.4;
 
@@ -174,9 +180,7 @@ public class Functions extends LinearOpMode{
                 //ENCODER-BASED MOTORS
                 motorEncoderMode(motorFR, motorFL, motorBR, motorBL, pivot);
 
-                telemetry.addLine("SETUP COMPLETE");
-                telemetry.addLine("READY!");
-                telemetry.update();
+
                 break;
             case relic:
 
@@ -188,6 +192,7 @@ public class Functions extends LinearOpMode{
 
                 jewelSensor = colorSensor(jewelSensor, hardwareMap, jewelSensorS, true);
                 sleep(2000);
+                break;
             case drive:
                 motorFR = motor(motorFR, hardwareMap, motorFRS, DcMotor.Direction.REVERSE);
                 motorFL = motor(motorFL, hardwareMap, motorFLS, DcMotor.Direction.FORWARD);
@@ -195,6 +200,7 @@ public class Functions extends LinearOpMode{
                 motorBL = motor(motorBL, hardwareMap, motorBLS, DcMotor.Direction.FORWARD);
 
                 motorEncoderMode(motorFR, motorFL, motorBR, motorBL);
+                break;
             case teleop:
                 //DRIVETRAIN SETUP
                 motorFR = motor(motorFR, hardwareMap, motorFRS, DcMotor.Direction.FORWARD);
@@ -220,9 +226,7 @@ public class Functions extends LinearOpMode{
                 drivetrain[2] = motorBR;
                 drivetrain[3] = motorBL;
 
-                telemetry.addLine("SETUP COMPLETE");
-                telemetry.addLine("READY!");
-                telemetry.update();
+
                 break;
             case glyph:
                 pivot = motor(pivot, hardwareMap, pivotS, DcMotorSimple.Direction.FORWARD);
@@ -231,9 +235,15 @@ public class Functions extends LinearOpMode{
                 leftTread = motor(leftTread, hardwareMap, leftTreadS, DcMotorSimple.Direction.FORWARD);
 
                 motorEncoderMode(pivot, rightTread, leftTread);
+                break;
+            case pivot:
 
+                pullServo = servo(pullServo, hardwareMap, pullServoS, Servo.Direction.FORWARD, 0, 1, 0);
+                break;
         }
-
+        telemetry.addLine("SETUP COMPLETE");
+        telemetry.addLine("READY!");
+        telemetry.update();
 
     }
 
