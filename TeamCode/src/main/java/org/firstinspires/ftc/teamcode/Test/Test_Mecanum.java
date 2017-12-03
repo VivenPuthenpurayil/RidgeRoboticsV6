@@ -18,7 +18,8 @@ public class Test_Mecanum extends FunctionsSimplified {
     public void runOpMode() throws InterruptedException{
         super.setRuntime(runtime);
         Setup();
-
+        telemetry.addData("Drivetrain motor 1: ", motorFR);
+        telemetry.update();
         waitForStart();
         runtime.reset();
         while (opModeIsActive()) {

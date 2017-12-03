@@ -28,6 +28,7 @@ public class Test_Jewel extends Functions {
             flick(team.blue1);
             sleep(3000);
             flick(team.red1);
+            drivetrain[0].setPower(1);
             break;
         }
     }

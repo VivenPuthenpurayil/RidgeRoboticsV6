@@ -113,7 +113,7 @@ public class DriveModeMecanum extends Functions{
 
 
                 }else {
-                    stopDrivetrain();
+                    stopDrivetrain(drivetrain);
                 }
             }
             else {
@@ -168,7 +168,7 @@ public class DriveModeMecanum extends Functions{
                     driveTrainMovement(0.2, movements.bl);
 
                 } else {
-                    stopDrivetrain();
+                    stopDrivetrain(drivetrain);
                 }
             }
             telemetry.addData("CRAWL MODE: ", gamepad1.right_bumper);

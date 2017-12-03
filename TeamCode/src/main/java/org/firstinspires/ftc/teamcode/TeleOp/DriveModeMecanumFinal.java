@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.TeleOp;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.Functions;
@@ -9,14 +10,14 @@ import org.firstinspires.ftc.teamcode.Functions;
 /**
  * Created by arulgupta on 10/22/17.
  */
-@TeleOp(name="TeleOp", group = "Main")
+@TeleOp(name="DriveModeFinal", group = "Main")
 
 public class DriveModeMecanumFinal extends Functions{
     public static final double rotationSpeed = 0.4;
 
     @Override
     public void runOpMode() throws InterruptedException {
-        Setup(setupType.teleop);
+        DcMotor[] drive = Setup(setupType.all);
         waitForStart();
 
         while (opModeIsActive()) {
@@ -120,7 +121,7 @@ public class DriveModeMecanumFinal extends Functions{
 
 
                 }else {
-                    stopDrivetrain();
+                    stopDrivetrain(drive);
                 }
             }
             else {
@@ -175,7 +176,7 @@ public class DriveModeMecanumFinal extends Functions{
                     driveTrainMovement(0.2, movements.bl);
 
                 } else {
-                    stopDrivetrain();
+                    stopDrivetrain(drive);
                 }
             }
             telemetry.addData("CRAWL MODE: ", gamepad1.right_bumper);

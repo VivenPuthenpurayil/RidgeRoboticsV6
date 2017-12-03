@@ -4,28 +4,28 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Functions;
+import org.firstinspires.ftc.teamcode.FunctionsNew;
+import org.firstinspires.ftc.teamcode.FunctionsSimplified;
 
-/**
- * Created by arulgupta on 9/29/17.
- */
-@Autonomous(name="Glyph Servo System", group="Test2")
+@Autonomous(name="Real Glyph Test", group="Test3")
 
-public class Test_glyphServoPull extends Functions {
+public class TestGlyphTread extends FunctionsNew {
 
     public ElapsedTime runtime = new ElapsedTime();
 
     public void runOpMode() throws InterruptedException{
         super.setRuntime(runtime);
-        Setup(setupType.pivot);
+        Setup(setupType.all);
+
+        telemetry.addData("Drivetrain motor 1: ", motorFR);
+        telemetry.update();
 
         waitForStart();
         runtime.reset();
         while (opModeIsActive()) {
-            pullServo.setPosition(1);
+            rightTread.setPower(0.7);
+            leftTread.setPower(-0.7);
             sleep(2000);
-            pullServo.setPosition(0);
-            sleep(2000);
-            break;
         }
     }
 }
