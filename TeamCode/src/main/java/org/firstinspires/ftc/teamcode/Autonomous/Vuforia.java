@@ -83,7 +83,8 @@ public class Vuforia extends Functions {
      */
     VuforiaLocalizer vuforia;
 
-    @Override public void runOpMode() {
+    @Override
+    public void runOpMode() {
 
         /*
          * To start up Vuforia, tell it the view that we wish to use for camera monitor (on the RC phone);
@@ -157,27 +158,20 @@ public class Vuforia extends Functions {
                 /* We further illustrate how to decompose the pose into useful rotational and
                  * translational components */
 
-                if (RelicRecoveryVuMark.LEFT == vuMark){    //Block should be placed in the right column
+                if (RelicRecoveryVuMark.LEFT == vuMark) {    //Block should be placed in the right column
 
-            }
-                else {
-                    if (RelicRecoveryVuMark.CENTER == vuMark){  //Block should be placed in the center column
+                } else if (RelicRecoveryVuMark.CENTER == vuMark) {  //Block should be placed in the center column
 
-                    }
-                    else{   //Block should be placed in the left column
+                } else if (RelicRecoveryVuMark.RIGHT == vuMark) { //Block should be placed in the left columm
 
-                    }
+                } else {
+                    telemetry.addData("VuMark", "not visible");
                 }
+            } else {
+                //MAKE IT ROTATE TILL IT SEES THE IMAGE
                 }
-            else {
-                telemetry.addData("VuMark", "not visible");
+                telemetry.update();
             }
-
-            telemetry.update();
         }
     }
 
-    String format(OpenGLMatrix transformationMatrix) {
-        return (transformationMatrix != null) ? transformationMatrix.formatAsTransform() : "null";
-    }
-}
