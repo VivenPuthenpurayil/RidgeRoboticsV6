@@ -5,19 +5,21 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.Func;
 import org.firstinspires.ftc.teamcode.Functions;
+import org.firstinspires.ftc.teamcode.FunctionsNew;
 
 /**
  * Created by arulgupta on 10/22/17.
  */
 @TeleOp(name="DriveModeFinal", group = "Main")
 
-public class DriveModeMecanumFinal extends Functions{
+public class DriveModeMecanumFinal extends FunctionsNew{
     public static final double rotationSpeed = 0.4;
 
     @Override
     public void runOpMode() throws InterruptedException {
-        DcMotor[] drive = Setup(setupType.all);
+        Setup(setupType.teleop);
         waitForStart();
 
         while (opModeIsActive()) {
@@ -121,7 +123,7 @@ public class DriveModeMecanumFinal extends Functions{
 
 
                 }else {
-                    stopDrivetrain(drive);
+                    stopDrivetrain();
                 }
             }
             else {
@@ -176,7 +178,7 @@ public class DriveModeMecanumFinal extends Functions{
                     driveTrainMovement(0.2, movements.bl);
 
                 } else {
-                    stopDrivetrain(drive);
+                    stopDrivetrain();
                 }
             }
             telemetry.addData("CRAWL MODE: ", gamepad1.right_bumper);
@@ -185,16 +187,16 @@ public class DriveModeMecanumFinal extends Functions{
             //Collection Control/*
             /*
             if(gamepad2.right_bumper && count == 0){
-                relicArm.setPower(0.2)    ;
+                relicMotor.setPower(0.2)    ;
                 count = 1;
 
             }
             else if(!gamepad2.right_bumper && gamepad2.left_bumper){
-                relicArm.setPower(-0.2);
+                relicMotor.setPower(-0.2);
                 count = 0;
             }
             else if(!gamepad2.right_bumper & !gamepad2.left_bumper){
-                relicArm.setPower(0);
+                relicMotor.setPower(0);
                 count = 0;
             }
             else{
@@ -240,7 +242,7 @@ public class DriveModeMecanumFinal extends Functions{
             }
             counts = 1;
 */
-            //
+
             if(gamepad2.y && count == 0){
                 rightTread.setPower(0.2);
                 leftTread.setPower(-0.2);
@@ -263,16 +265,15 @@ public class DriveModeMecanumFinal extends Functions{
             counts = 1;
 
             if(gamepad2.x && count == 0){
-                pivot.setPower(0.2)    ;
+                pullServo.setPosition(1);
                 count = 1;
 
             }
             else if(!gamepad2.x && gamepad2.b){
-                pivot.setPower(-0.2);
+                pullServo.setPosition(0.25);
                 count = 0;
             }
             else if(!gamepad2.x & !gamepad2.b){
-                pivot.setPower(0);
                 count = 0;
             }
             else{

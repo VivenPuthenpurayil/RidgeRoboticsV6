@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import java.util.Arrays;
@@ -33,7 +34,7 @@ public class FunctionsNew extends LinearOpMode{
 
         public static final int BLUE_VALUE = 1;
 
-        public static final double PULL_SERVO_END_VAL = 0.2;
+        public static final double PULL_SERVO_END_VAL = 1;
         public static final double PULL_SERVO_END_INCREMENT = 0.02;
 
 
@@ -70,13 +71,13 @@ public class FunctionsNew extends LinearOpMode{
             lift, drop, center;
         }
         public enum setupType{
-            all, glyph, jewel, relic, drive, teleop, pivot;
+            all, glyph, jewel, relic, drive, teleop;
         }
         public enum team{
         red1, red2, blue1, blue2;
     }
 
-    //Motors
+    //Motors/Sensors
 
         //Drivetrain
         public DcMotor motorFR;
@@ -84,28 +85,30 @@ public class FunctionsNew extends LinearOpMode{
         public DcMotor motorBR;
         public DcMotor motorBL;
 
-        public String motorFRS = "motorFR_green1";
-        public String motorFLS = "motorFL_red2";
-        public String motorBRS = "motorBR_green0";
-        public String motorBLS = "motorBL_red1";
+        public static final String motorFRS = "motorFR_red3"; // updated //Configured
+        public static final String motorFLS = "motorFL_green2"; // updated //Configured
+        public static final String motorBRS = "motorBR_red2";// updated //Configured
+        public static final String motorBLS = "motorBL_green1"; // updated //Configured
 
         //Jewel Systems
         public Servo jewelDown;
         public Servo jewelFlick;
         public ColorSensor jewelSensor;
 
-        public String jewelDownS = "jewelDown_green5";
-        public String jewelFlickS = "jewelFlick_red5";
-        public String jewelSensorS = "colorSensor_red1";
+        public static final String jewelDownS = "jewelDown_red4"; // updated //Configured
+        public static final String jewelFlickS = "jewelFlick_red5"; // updated //Configured
+        public static final String jewelSensorS = "colorSensor_red1"; // updated //Configured
 
         //Glyph System
         public Servo pullServo;
         public DcMotor rightTread;
         public DcMotor leftTread;
+        public TouchSensor glyphButton;
 
-        public String pullServoS = "pullServo_green2";
-        public String rightTreadS = "rightTread_green3";
-        public String leftTreadS = "leftTread_red3";
+        public static final String pullServoS = "pullServo_green0"; // updated //Configured
+        public static final String rightTreadS = "rightTread_red1"; // updated //Configured
+        public static final String leftTreadS = "leftTread_green3"; // updated //Configured
+        public static final String glyphButtonS = "glyphButton_red2";
 
         //Relic Systems
 
@@ -114,60 +117,69 @@ public class FunctionsNew extends LinearOpMode{
         public Servo rightClaw;
         public Servo leftClaw;
 
-        public String relicMotorS = "relicMotor_red0";
-        public String angleServoS = "angleServo_red4";
-        public String rightClawS = "rightClaw_red3";
-        public String leftClawS = "leftClaw_red2";
+        public static final String relicMotorS = "relicMotor_green0"; // updated //Configured
+        public static final String angleServoS = "angleServo_red4";
+        public static final String rightClawS = "rightClaw_red3";
+        public static final String leftClawS = "leftClaw_red2";
 
     //                      Initializations
 
         //  Jewel Servos
 
             //  Starting Positions
-                public static final double startingPositionDown = 0;
-                public static final double startingPositionFlick = 0;
+                public static final double MIN_POSITION_DOWN = 0;
+                public static final double MIN_POSITION_FLICK = 0;
 
             //  End Positions
-                public static final double endPositionDown = 1;
-                public static final double endPositionFlick = 1;
+                public static final double MAX_POSITION_DOWN = 1;
+                public static final double MAX_POSITION_FLICK = 1;
 
             // Initial Positions
-                public static final double jewelDownPosition = 0.75;
-                public static final double jewelFlickPosition = 0.5;
+                public static final double JEWEL_DOWN_INITIAL_POSITION = 0.65;
+                public static final double JEWEL_FLICK_INITIAL_POSITION = 0.55;
+
+            // Important Positions
+                public static final double JEWEL_DOWN_LOW_POSITION = 0.1;
+                public static final double JEWEL_FLICK_HIT_POSITION_LEFT = 0;
+                public static final double JEWEL_FLICK_HIT_POSITION_RIGHT = 1;
+
+            // Increments
+                public static final double JEWEL_DOWN_INCREMENT = 0.01;
 
 
-        //Relic Servos
+
+
+    //Relic Servos
             //  Starting Positions
-                public static final double startingPositionAngle = 0;
-                public static final double startingPositionRightClaw = 0;
-                public static final double startingPositionLeftClaw = 0;
+                public static final double MIN_POSITION_ANGLE = 0;
+                public static final double MIN_POSITION_RIGHT_CLAW = 0;
+                public static final double MIN_POSITION_LEFT_CLAW = 0;
 
             //  End Positions
-                public static final double endPositionAngle = 1;
-                public static final double endPositionRightClaw = 1;
-                public static final double endPositionLeftClaw = 1;
-
+                public static final double MAX_POSITION_ANGLE = 1;
+                public static final double MAX_POSITION_RIGHT_CLAW = 1;
+                public static final double MAX_POSITION_LEFT_CLAW = 1;
 
             // Initial Positions
-                public static final double angleServoPositions = 0;
-                public static final double rightClawPositions = 0;
-                public static final double leftClawPositions = 0;
+                public static final double ANGLE_SERVO_INITIAL_POSITION = 0;
+                public static final double RIGHT_CLAW_INITIAL_POSITION = 0;
+                public static final double LEFT_CLAW_INITIAL_POSITION = 0;
 
 
         //  Glyph Servos
 
             //  Starting Positions
-                public static final double startingPositionPullServo = 0;
+                public static final double MIN_POSITION_PULL_SERVO = 0;
 
             // End Position
-                public static final double endPositionpullServo = 1;
+                public static final double MAX_POSITION_PULL_SERVO = 1;
 
             //  Initial Positions
-                public static final double pullServoPositions = 1;
+                public static final double PULL_SERVO_INITIAL_POSITION = 0;
 
     // Arrays
     public movements[] allMovements = {movements.forward, movements.backward, movements.right, movements.left, movements.tr, movements.tl, movements.br, movements.bl, movements.cw, movements.ccw};
-    public DcMotor[] drivetrain = new DcMotor[1];
+    public DcMotor[] drivetrain = new DcMotor[4];
 
 
     //----------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -179,19 +191,143 @@ public class FunctionsNew extends LinearOpMode{
     }
 
     public void Setup(setupType setup) throws InterruptedException{
-        /*motorFL = motor(motorFL, hardwareMap, motorFLS, DcMotor.Direction.FORWARD);
+        /*
+        Sample for motor with encoder on drivetrain:
+        motorFL = motor(motorFL, hardwareMap, motorFLS, DcMotor.Direction.FORWARD);
 
         motorEncoderMode(motorFL);
 
         drivetrain[0] = motorFL;*/
 
-        rightTread = motor(rightTread, hardwareMap, rightTreadS, DcMotorSimple.Direction.FORWARD);
-        leftTread = motor(leftTread, hardwareMap, leftTreadS, DcMotorSimple.Direction.FORWARD);
-        pullServo = servo(pullServo, hardwareMap, pullServoS, Servo.Direction.FORWARD, startingPositionAngle, endPositionAngle, pullServoPositions);
+        switch (setup){
+            case all:
+                //DRIVETRAIN INITIALIZATION
+                motorFR = motor(motorFR, hardwareMap, motorFRS, DcMotorSimple.Direction.FORWARD);
+                motorFL = motor(motorFL, hardwareMap, motorFLS, DcMotorSimple.Direction.FORWARD);
+                motorBR = motor(motorBR, hardwareMap, motorBRS, DcMotorSimple.Direction.FORWARD);
+                motorBL = motor(motorBL, hardwareMap, motorBLS, DcMotorSimple.Direction.FORWARD);
+
+                //GLYPH SETUP
+                rightTread = motor(rightTread, hardwareMap, rightTreadS, DcMotorSimple.Direction.FORWARD);
+                leftTread = motor(leftTread, hardwareMap, leftTreadS, DcMotorSimple.Direction.FORWARD);
+                pullServo = servo(pullServo, hardwareMap, pullServoS,
+                        Servo.Direction.FORWARD, MIN_POSITION_PULL_SERVO, MAX_POSITION_PULL_SERVO, PULL_SERVO_INITIAL_POSITION);
+
+                //JEWEL SETUP
+                jewelDown = servo(jewelDown, hardwareMap, jewelDownS
+                        , Servo.Direction.FORWARD, MIN_POSITION_DOWN, MAX_POSITION_DOWN, JEWEL_DOWN_INITIAL_POSITION);
+                jewelFlick = servo(jewelFlick, hardwareMap, jewelFlickS,
+                        Servo.Direction.FORWARD, MIN_POSITION_FLICK, MAX_POSITION_FLICK, JEWEL_FLICK_INITIAL_POSITION);
+
+                //RELIC SETUP
+
+                /*
+                relicMotor = motor(relicMotor, hardwareMap, relicMotorS, DcMotorSimple.Direction.FORWARD);
+
+
+                angleServo = servo(angleServo, hardwareMap, angleServoS, Servo.Direction.FORWARD, MIN_POSITION_ANGLE, MAX_POSITION_ANGLE, ANGLE_SERVO_INITIAL_POSITION);
+                rightClaw = servo(rightClaw, hardwareMap, rightClawS, Servo.Direction.FORWARD, MIN_POSITION_RIGHT_CLAW, MAX_POSITION_RIGHT_CLAW, RIGHT_CLAW_INITIAL_POSITION);
+                leftClaw = servo(leftClaw, hardwareMap, leftClawS, Servo.Direction.FORWARD, MIN_POSITION_LEFT_CLAW, MAX_POSITION_LEFT_CLAW, LEFT_CLAW_INITIAL_POSITION);
+                */
+
+                //ENCODER SETUP
+                motorEncoderMode(motorFR, motorFL, motorBR, motorBL/*, relicMotor*/);
+
+                //DRIVETRAIN SETUP
+                drivetrain[0] = motorFR;
+                drivetrain[1] = motorFL;
+                drivetrain[2] = motorBR;
+                drivetrain[3] = motorBL;
+                break;
+            case drive:
+                //DRIVETRAIN INITIALIZATION
+                motorFR = motor(motorFR, hardwareMap, motorFRS, DcMotorSimple.Direction.FORWARD);
+                motorFL = motor(motorFL, hardwareMap, motorFLS, DcMotorSimple.Direction.FORWARD);
+                motorBR = motor(motorBR, hardwareMap, motorBRS, DcMotorSimple.Direction.FORWARD);
+                motorBL = motor(motorBL, hardwareMap, motorBLS, DcMotorSimple.Direction.FORWARD);
+
+                //ENCODER MODE
+                motorEncoderMode(motorFR, motorFL, motorBR, motorBL);
+
+                //DRIVETRAIN SETUP
+                drivetrain[0] = motorFR;
+                drivetrain[1] = motorFL;
+                drivetrain[2] = motorBR;
+                drivetrain[3] = motorBL;
+                break;
+            case glyph:
+                //GLYPH SETUP
+                rightTread = motor(rightTread, hardwareMap, rightTreadS, DcMotorSimple.Direction.FORWARD);
+                leftTread = motor(leftTread, hardwareMap, leftTreadS, DcMotorSimple.Direction.FORWARD);
+                pullServo = servo(pullServo, hardwareMap, pullServoS,
+                        Servo.Direction.FORWARD, MIN_POSITION_ANGLE, MAX_POSITION_ANGLE, PULL_SERVO_INITIAL_POSITION);
+
+                break;
+            case jewel:
+                //JEWEL SETUP
+                jewelDown = servo(jewelDown, hardwareMap, jewelDownS,
+                        Servo.Direction.FORWARD, MIN_POSITION_DOWN, MAX_POSITION_DOWN, JEWEL_DOWN_INITIAL_POSITION);
+                jewelFlick = servo(jewelFlick, hardwareMap, jewelFlickS,
+                        Servo.Direction.FORWARD, MIN_POSITION_FLICK, MAX_POSITION_FLICK, JEWEL_FLICK_INITIAL_POSITION);
+                break;
+            case relic:
+                //RELIC SETUP
+
+                /*
+                relicMotor = motor(relicMotor, hardwareMap, relicMotorS, DcMotorSimple.Direction.FORWARD);
+
+
+                angleServo = servo(angleServo, hardwareMap, angleServoS, Servo.Direction.FORWARD, MIN_POSITION_ANGLE, MAX_POSITION_ANGLE, ANGLE_SERVO_INITIAL_POSITION);
+                rightClaw = servo(rightClaw, hardwareMap, rightClawS, Servo.Direction.FORWARD, MIN_POSITION_RIGHT_CLAW, MAX_POSITION_RIGHT_CLAW, RIGHT_CLAW_INITIAL_POSITION);
+                leftClaw = servo(leftClaw, hardwareMap, leftClawS, Servo.Direction.FORWARD, MIN_POSITION_LEFT_CLAW, MAX_POSITION_LEFT_CLAW, LEFT_CLAW_INITIAL_POSITION);
+                */
+                break;
+            case teleop:
+                //DRIVETRAIN INITIALIZATION
+                motorFR = motor(motorFR, hardwareMap, motorFRS, DcMotorSimple.Direction.FORWARD);
+                motorFL = motor(motorFL, hardwareMap, motorFLS, DcMotorSimple.Direction.FORWARD);
+                motorBR = motor(motorBR, hardwareMap, motorBRS, DcMotorSimple.Direction.FORWARD);
+                motorBL = motor(motorBL, hardwareMap, motorBLS, DcMotorSimple.Direction.FORWARD);
+
+                //GLYPH SETUP
+                rightTread = motor(rightTread, hardwareMap, rightTreadS, DcMotorSimple.Direction.FORWARD);
+                leftTread = motor(leftTread, hardwareMap, leftTreadS, DcMotorSimple.Direction.FORWARD);
+                pullServo = servo(pullServo, hardwareMap, pullServoS,
+                        Servo.Direction.FORWARD, MIN_POSITION_ANGLE, MAX_POSITION_ANGLE, PULL_SERVO_INITIAL_POSITION);
+
+                //JEWEL SETUP
+                jewelDown = servo(jewelDown, hardwareMap, jewelDownS
+                        , Servo.Direction.FORWARD, MIN_POSITION_DOWN, MAX_POSITION_DOWN, JEWEL_DOWN_INITIAL_POSITION);
+                jewelFlick = servo(jewelFlick, hardwareMap, jewelFlickS,
+                        Servo.Direction.FORWARD, MIN_POSITION_FLICK, MAX_POSITION_FLICK, JEWEL_FLICK_INITIAL_POSITION);
+
+                //RELIC SETUP
+
+                /*
+                relicMotor = motor(relicMotor, hardwareMap, relicMotorS, DcMotorSimple.Direction.FORWARD);
+
+
+                angleServo = servo(angleServo, hardwareMap, angleServoS, Servo.Direction.FORWARD, MIN_POSITION_ANGLE, MAX_POSITION_ANGLE, ANGLE_SERVO_INITIAL_POSITION);
+                rightClaw = servo(rightClaw, hardwareMap, rightClawS, Servo.Direction.FORWARD, MIN_POSITION_RIGHT_CLAW, MAX_POSITION_RIGHT_CLAW, RIGHT_CLAW_INITIAL_POSITION);
+                leftClaw = servo(leftClaw, hardwareMap, leftClawS, Servo.Direction.FORWARD, MIN_POSITION_LEFT_CLAW, MAX_POSITION_LEFT_CLAW, LEFT_CLAW_INITIAL_POSITION);
+                */
+
+                //ENCODER SETUP
+                motorEncoderMode(motorFR, motorFL, motorBR, motorBL/*, relicMotor*/);
+
+                //DRIVETRAIN SETUP
+                drivetrain[0] = motorFR;
+                drivetrain[1] = motorFL;
+                drivetrain[2] = motorBR;
+                drivetrain[3] = motorBL;
+                break;
+        }
+
     }
 
     //------------------ENCODERS MOVEMENTS------------------------------------------------------------------------
-    public void Forward(double speed, double distance,  /*In Revolution*/ double timeoutS, long waitAfter) throws   InterruptedException {
+    public void Forward(double speed, double distance,  /*In Revolution*/
+                        double timeoutS, long waitAfter) throws   InterruptedException {
 
         int newFLTarget;
         int newFRTarget;
@@ -256,7 +392,8 @@ public class FunctionsNew extends LinearOpMode{
         }
 
     }
-    public void Backward(double speed, double distance,  /*In Revolution*/ double timeoutS, long waitAfter) throws   InterruptedException {
+    public void Backward(double speed, double distance,  /*In Revolution*/
+                         double timeoutS, long waitAfter) throws   InterruptedException {
 
         int newFLTarget;
         int newFRTarget;
@@ -321,7 +458,8 @@ public class FunctionsNew extends LinearOpMode{
         }
 
     }
-    public void Right(double speed, double distance,  /*In Revolution*/ double timeoutS, long waitAfter) throws   InterruptedException {
+    public void Right(double speed, double distance,  /*In Revolution*/
+                      double timeoutS, long waitAfter) throws   InterruptedException {
 
         int newFLTarget;
         int newFRTarget;
@@ -386,7 +524,8 @@ public class FunctionsNew extends LinearOpMode{
         }
 
     }
-    public void Left(double speed, double distance,  /*In Revolution*/ double timeoutS, long waitAfter) throws   InterruptedException {
+    public void Left(double speed, double distance,  /*In Revolution*/
+                     double timeoutS, long waitAfter) throws   InterruptedException {
 
         int newFLTarget;
         int newFRTarget;
@@ -453,7 +592,8 @@ public class FunctionsNew extends LinearOpMode{
     }
 
     //CAN BE ALTERED FOR 45˚ MOVEMENT
-    public void TR(double speed, double distance,  /*In Revolution*/ double timeoutS, long waitAfter) throws   InterruptedException {
+    public void TR(double speed, double distance,  /*In Revolution*/
+                   double timeoutS, long waitAfter) throws   InterruptedException {
 
         int newFLTarget;
         int newFRTarget;
@@ -518,7 +658,8 @@ public class FunctionsNew extends LinearOpMode{
         }
 
     }
-    public void TL(double speed, double distance,  /*In Revolution*/ double timeoutS, long waitAfter) throws   InterruptedException {
+    public void TL(double speed, double distance,  /*In Revolution*/
+                   double timeoutS, long waitAfter) throws   InterruptedException {
 
         int newFLTarget;
         int newFRTarget;
@@ -583,7 +724,8 @@ public class FunctionsNew extends LinearOpMode{
         }
 
     }
-    public void BR(double speed, double distance,  /*In Revolution*/ double timeoutS, long waitAfter) throws   InterruptedException {
+    public void BR(double speed, double distance,  /*In Revolution*/
+                   double timeoutS, long waitAfter) throws   InterruptedException {
 
         int newFLTarget;
         int newFRTarget;
@@ -648,7 +790,8 @@ public class FunctionsNew extends LinearOpMode{
         }
 
     }
-    public void BL(double speed, double distance,  /*In Revolution*/ double timeoutS, long waitAfter) throws   InterruptedException {
+    public void BL(double speed, double distance,  /*In Revolution*/
+                   double timeoutS, long waitAfter) throws   InterruptedException {
 
         int newFLTarget;
         int newFRTarget;
@@ -714,7 +857,8 @@ public class FunctionsNew extends LinearOpMode{
 
     }
 
-    public void CW(double speed, double distance,  /*In Revolution*/ double timeoutS, long waitAfter) throws   InterruptedException {
+    public void CW(double speed, double distance,  /*In Revolution*/
+                   double timeoutS, long waitAfter) throws   InterruptedException {
 
         int newFLTarget;
         int newFRTarget;
@@ -779,7 +923,8 @@ public class FunctionsNew extends LinearOpMode{
         }
 
     }
-    public void CCW(double speed, double distance,  /*In Revolution*/ double timeoutS, long waitAfter) throws   InterruptedException {
+    public void CCW(double speed, double distance,  /*In Revolution*/
+                    double timeoutS, long waitAfter) throws   InterruptedException {
 
         int newFLTarget;
         int newFRTarget;
@@ -845,9 +990,45 @@ public class FunctionsNew extends LinearOpMode{
 
     }
 
+    //------------------TEST FUNCTIONS------------------------------------------------------------------------
+    public void MecanumTest(double speed, double distance) throws InterruptedException{
+        telemetry.addLine("FORWARD");
+        telemetry.update();
+        Forward(speed, distance, 8, 2000);
+        telemetry.addLine("Backward");
+        telemetry.update();
+        Backward(speed, distance, 8, 2000);
+        telemetry.addLine("right");
+        telemetry.update();
+        Right(speed, distance, 8, 2000);
+        telemetry.addLine("left");
+        telemetry.update();
+        Left(speed, distance, 8, 2000);
+        telemetry.addLine("top right");
+        telemetry.update();
+        TR(speed, distance, 8, 2000);
+        telemetry.addLine("top left");
+        telemetry.update();
+        TL(speed, distance, 8, 2000);
+        telemetry.addLine("back right");
+        telemetry.update();
+        BR(speed, distance, 8, 2000);
+        telemetry.addLine("back left");
+        telemetry.update();
+        BL(speed, distance, 8, 2000);
+        telemetry.addLine("cw");
+        telemetry.update();
+        CW(speed, distance, 8, 2000);
+        telemetry.addLine("ccw");
+        telemetry.update();
+        CCW(speed, distance, 8, 2000);
+        telemetry.addLine("Done.");
+        telemetry.update();
+
+    }
     //------------------JEWEL FUNCTIONS------------------------------------------------------------------------
     public void flick(team side) throws InterruptedException{
-        for (double p = jewelDown.getPosition(); jewelDown.getPosition() > 0.1; p-=0.01){
+        for (double p = jewelDown.getPosition(); jewelDown.getPosition() > JEWEL_DOWN_LOW_POSITION; p-= JEWEL_DOWN_INCREMENT){
             jewelDown.setPosition(p);
             sleep(50);
         }
@@ -860,13 +1041,13 @@ public class FunctionsNew extends LinearOpMode{
             case red2:
 
                 if (jewelSensor.blue() >= BLUE_VALUE) { //FLICK REG
-                    jewelFlick.setPosition(0);
+                    jewelFlick.setPosition(JEWEL_FLICK_HIT_POSITION_LEFT);
                     telemetry.addData("Position:", jewelFlick.getPosition());
                     telemetry.update();
 
                 }
                 else {                               //FLICK OPPOSITE
-                    jewelFlick.setPosition(1);
+                    jewelFlick.setPosition(JEWEL_FLICK_HIT_POSITION_RIGHT);
                     telemetry.addData("Position:", jewelFlick.getPosition());
                     telemetry.update();
                 }
@@ -875,21 +1056,21 @@ public class FunctionsNew extends LinearOpMode{
             case blue1:
             case blue2:
                 if (jewelSensor.blue() >= BLUE_VALUE) { //FLICK OPPOSITE
-                    jewelFlick.setPosition(1);
+                    jewelFlick.setPosition(JEWEL_FLICK_HIT_POSITION_RIGHT);
                     telemetry.addData("Position:", jewelFlick.getPosition());
                     telemetry.update();
 
                 }
                 else {                              //FLICK REGULAR
-                    jewelFlick.setPosition(0);
+                    jewelFlick.setPosition(JEWEL_FLICK_HIT_POSITION_LEFT);
                     telemetry.addData("Position:", jewelFlick.getPosition());
                     telemetry.update();
                 }
                 break;
         }
         sleep(1000);
-        jewelFlick.setPosition(0.6);
-        jewelDown.setPosition(0.6);
+        jewelFlick.setPosition(JEWEL_FLICK_INITIAL_POSITION);
+        jewelDown.setPosition(JEWEL_DOWN_INITIAL_POSITION);
         sleep(50);
     }
 
@@ -909,7 +1090,8 @@ public class FunctionsNew extends LinearOpMode{
     //none right now
 
     //------------------HARDWARE SETUP FUNCTIONS------------------------------------------------------------------------
-    public DcMotor motor(DcMotor motor, HardwareMap hardwareMap, String name, DcMotor.Direction direction) throws InterruptedException{
+    public DcMotor motor(DcMotor motor, HardwareMap hardwareMap,
+                         String name, DcMotor.Direction direction) throws InterruptedException{
         motor = hardwareMap.dcMotor.get(name);
         motor.setDirection(DcMotor.Direction.FORWARD);
         motor.setPower(0);
@@ -924,14 +1106,16 @@ public class FunctionsNew extends LinearOpMode{
             i.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
     }
-    public Servo servo(Servo servo, HardwareMap hardwareMap, String name, Servo.Direction direction, double min, double max, double start) throws InterruptedException{
+    public Servo servo(Servo servo, HardwareMap hardwareMap,
+                       String name, Servo.Direction direction, double min, double max, double start) throws InterruptedException{
         servo = hardwareMap.servo.get(name);
         servo.setDirection(direction);
         servo.scaleRange(min, max);
         servo.setPosition(start);
         return servo;
     }
-    public ColorSensor colorSensor(ColorSensor sensor, HardwareMap hardwareMap, String name, boolean ledOn) throws InterruptedException{
+    public ColorSensor colorSensor(ColorSensor sensor, HardwareMap hardwareMap,
+                                   String name, boolean ledOn) throws InterruptedException{
         sensor = hardwareMap.colorSensor.get(name);
         sensor.enableLed(ledOn);
 
@@ -958,7 +1142,8 @@ public class FunctionsNew extends LinearOpMode{
 
 
     //------------------ALTERED ENCODER FUNCTIONS------------------------------------------------------------------------
-    public void driveTrainEncoderMovement(double speed, double distance, double timeoutS, long waitAfter, FunctionsNew.movements movement) throws  InterruptedException{
+    public void driveTrainEncoderMovement(double speed, double distance,
+                                          double timeoutS, long waitAfter, FunctionsNew.movements movement) throws  InterruptedException{
 
         int[] targets = new int[drivetrain.length];
         double[] signs = movement.getSigns();
@@ -1016,7 +1201,8 @@ public class FunctionsNew extends LinearOpMode{
 
         }
     }
-    public void encoderMovement(double speed, double distance, double timeoutS, long waitAfter, FunctionsNew.movements movement, DcMotor... motors) throws  InterruptedException{
+    public void encoderMovement(double speed, double distance,
+                                double timeoutS, long waitAfter, FunctionsNew.movements movement, DcMotor... motors) throws  InterruptedException{
 
         int[] targets = new int[motors.length];
         double[] signs = movement.getSigns();

@@ -15,7 +15,7 @@ public class TestGlyphTread extends FunctionsNew {
 
     public void runOpMode() throws InterruptedException{
         super.setRuntime(runtime);
-        Setup(setupType.all);
+        Setup(setupType.glyph);
 
         telemetry.addData("Drivetrain motor 1: ", motorFR);
         telemetry.update();
@@ -23,8 +23,15 @@ public class TestGlyphTread extends FunctionsNew {
         waitForStart();
         runtime.reset();
         while (opModeIsActive()) {
+            for (double position = pullServo.getPosition(); position <= PULL_SERVO_END_VAL; position+=PULL_SERVO_END_INCREMENT){
+                pullServo.setPosition(position);
+                sleep(50);
+                telemetry.addData("Servo Position: ", pullServo.getPosition());
+                telemetry.update();
+            }
             rightTread.setPower(0.7);
             leftTread.setPower(-0.7);
+
             sleep(2000);
         }
     }

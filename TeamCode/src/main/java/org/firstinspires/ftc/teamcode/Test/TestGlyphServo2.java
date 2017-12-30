@@ -5,9 +5,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.FunctionsNew;
 
-@Autonomous(name="Glyph Servo System Test", group="Test3")
+@Autonomous(name="Glyph Servo Test 2", group="Test3")
 
-public class TestGlyphServo extends FunctionsNew {
+public class TestGlyphServo2 extends FunctionsNew {
 
     public ElapsedTime runtime = new ElapsedTime();
 
@@ -21,23 +21,15 @@ public class TestGlyphServo extends FunctionsNew {
         waitForStart();
         runtime.reset();
         while (opModeIsActive()) {
-            while(!glyphButton.isPressed()){
-                rightTread.setPower(0.7);
-                leftTread.setPower(-0.7);
-            }
-            rightTread.setPower(0);
-            leftTread.setPower(0);
-            for (double position = pullServo.getPosition(); position > PULL_SERVO_END_VAL; position-=PULL_SERVO_END_INCREMENT){
+
+            for (double position = pullServo.getPosition(); position <= PULL_SERVO_END_VAL; position+=PULL_SERVO_END_INCREMENT){
                 pullServo.setPosition(position);
                 sleep(50);
                 telemetry.addData("Servo Position: ", pullServo.getPosition());
                 telemetry.update();
             }
-            rightTread.setPower(0.7);
-            leftTread.setPower(0.7);
+
             sleep(2000);
-            rightTread.setPower(0);
-            leftTread.setPower(0);
             break;
         }
     }

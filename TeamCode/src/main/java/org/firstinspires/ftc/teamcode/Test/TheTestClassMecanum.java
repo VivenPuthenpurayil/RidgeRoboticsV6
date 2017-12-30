@@ -103,6 +103,9 @@ public class TheTestClassMecanum extends Functions {
             else if (gamepad1.left_trigger > 0.25){
                 //Run 16
             }
+            telemetry.addLine("Completed action.");
+            telemetry.update();
+
             waitOneFullHardwareCycle();
         }
     }
